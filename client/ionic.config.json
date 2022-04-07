@@ -1,0 +1,8 @@
+{
+  "name": "fit-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "249bbbe3"
+}
