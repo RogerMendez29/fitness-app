@@ -1,0 +1,2 @@
+class PersonalRecordsController < ApplicationController
+end
