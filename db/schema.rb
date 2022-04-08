@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_08_134524) do
+ActiveRecord::Schema.define(version: 2022_04_08_135813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,13 @@ ActiveRecord::Schema.define(version: 2022_04_08_134524) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.integer "follower_id"
+    t.integer "followee_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "personal_records", force: :cascade do |t|
     t.integer "user_id"
     t.integer "exercise_id"
@@ -50,6 +57,13 @@ ActiveRecord::Schema.define(version: 2022_04_08_134524) do
     t.string "fitness_level"
     t.string "profile_avatar"
     t.string "profile_thumbnail"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "trains", force: :cascade do |t|
+    t.integer "trainer_id"
+    t.integer "trainee_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
