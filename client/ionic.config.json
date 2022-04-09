@@ -1,8 +1,8 @@
 {
-  "name": "fit-app",
+  "name": "FitWorld",
   "integrations": {
     "capacitor": {}
   },
   "type": "react",
-  "id": "249bbbe3"
+  "id": "e7b499de"
 }

@@ -1,6 +1,6 @@
 {
 	"appId": "io.ionic.starter",
-	"appName": "fit-app",
+	"appName": "FitWorld",
 	"webDir": "build",
 	"bundledWebRuntime": false
 }

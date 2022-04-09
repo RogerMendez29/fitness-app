@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+  namespace :api do
   
   resources :trains
   resources :follows
@@ -10,11 +12,19 @@ Rails.application.routes.draw do
   resources :profiles
   resources :users
 
+  get "/me", to: "users#show"
+  post "/signup", to: "users#create"
+
+  post "/login", to: "sessions#create"
+  delete "/logout", to: "sessions#destroy"
+
   post '/users/:id/follow', to: "users#follow"
   post '/users/:id/unfollow', to: "users#unfollow"
 
   post '/users/:id/train', to: "users#train"
   post '/users/:id/untrain', to: "users#untrain"
+
+  end
 
 
   # Routing logic: fallback requests for React Router.

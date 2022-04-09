@@ -11,6 +11,8 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { ellipse, square, triangle } from "ionicons/icons";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -33,11 +35,23 @@ import "./theme/variables.css";
 
 setupIonicReact();
 
-function App() {
+const App = () => (
   <IonApp>
-    <IonReactRouter></IonReactRouter>
-  </IonApp>;
+    <IonReactRouter>
+      <IonRouterOutlet>
+        <Route exact path="/login">
+          <Login />
+        </Route>
+        <Route exact path="/signup">
+          <Signup />
+        </Route>
 
-}
+        <Route exact path="/">
+          <Redirect to="/login" />
+        </Route>
+      </IonRouterOutlet>
+    </IonReactRouter>
+  </IonApp>
+);
 
 export default App;
