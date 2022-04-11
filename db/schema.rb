@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2022_04_08_135813) do
     t.string "password_digest"
     t.boolean "trainer", default: false
     t.boolean "admin", default: false
-    t.integer "phone"
+    t.string "phone"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

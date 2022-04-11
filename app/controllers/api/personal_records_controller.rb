@@ -1,2 +1,2 @@
-class PersonalRecordsController < ApplicationController
+class Api::PersonalRecordsController < ApplicationController
 end

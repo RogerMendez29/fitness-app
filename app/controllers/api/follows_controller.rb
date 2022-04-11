@@ -1,2 +1,2 @@
-class FollowsController < ApplicationController
+class Api::FollowsController < ApplicationController
 end

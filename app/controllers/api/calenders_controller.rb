@@ -1,2 +1,2 @@
-class CalendersController < ApplicationController
+class Api::CalendersController < ApplicationController
 end

@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class Api::UsersController < ApplicationController
     def index
         users = User.all.order(:id)
         render json:users
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     private
 
     def user_params
-        params.permit(:username, :password, :password_confirmation)
+        params.permit(:email, :trainer,:phone, :password, :password_confirmation)
 
     end
 

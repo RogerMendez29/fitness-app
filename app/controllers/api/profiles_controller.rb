@@ -1,2 +1,2 @@
-class ProfilesController < ApplicationController
+class Api::ProfilesController < ApplicationController
 end

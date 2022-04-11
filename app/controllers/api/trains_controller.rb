@@ -1,2 +1,2 @@
-class TrainsController < ApplicationController
+class Api::TrainsController < ApplicationController
 end

@@ -11,11 +11,43 @@ import {
 import "../theme/LoginForm.css";
 
 const SignupForm = () => {
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState();
+
+  const [passwordConfirmation, setPasswordConfirmation] = useState("")
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    fetch("/api/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        phone,
+        password_confirmation: passwordConfirmation,
+      }),
+    // }).then((res) => {
+    //   if (res.ok) {
+    //     res.json().then((user) => {
+    //       setCurrentUser(user);
+    //     });
+    //   } else {
+    //     res.json().then((errorData) => {
+    //       setErrors(errorData.error);
+    //     });
+    //   }
+    });
+  }
 
   return (
     <div className="login-card">
       <IonCard class="login-form">
+      <form onSubmit={handleSubmit}>
+
         <IonCardHeader>
           <IonCardTitle>Fit World</IonCardTitle>
         </IonCardHeader>
@@ -23,32 +55,41 @@ const SignupForm = () => {
           class="login-input"
           type="text"
           placeholder="Email"
+          onIonChange={(e) => setEmail(e.target.value)}
+          value={email}
           required
         ></IonInput>
         <IonInput
           class="login-input"
           type="text"
           placeholder="Phone"
+          onIonChange={(e) => setPhone(e.target.value)}
+          value={phone}
           required
         ></IonInput>
         <IonInput
           class="login-input"
           type="password"
           placeholder="Password"
+          onIonChange={(e) => setPassword(e.target.value)}
+          value={password}
           required
         ></IonInput>
         <IonInput
           class="login-input"
-          type="password "
+          type="password"
           placeholder="Password Confirmation"
+          onIonChange={(e) => setPasswordConfirmation(e.target.value)}
+          value={passwordConfirmation}
           required
         ></IonInput>
-        <IonButton expand="block" class="login-btn">
-          Login
+        <IonButton expand="block" class="login-btn" type="submit">
+          Sign up
         </IonButton>
         <IonItem href="#login" className="ion-activated">
           <IonLabel>Already have an account? Login</IonLabel>
         </IonItem>
+        </form>
       </IonCard>
     </div>
   );
