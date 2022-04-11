@@ -1,5 +1,5 @@
 import { Redirect, Route } from "react-router-dom";
-import {useState,useEffect} from "react"
+import { useState, useEffect } from "react";
 import {
   IonApp,
   IonIcon,
@@ -11,10 +11,9 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Home from "./pages/Home";
 
+import AuthenticatedApp from "./components/AuthenticatedApp";
+import UnauthenticatedApp from "./components/UnauthenticatedApp";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -38,32 +37,37 @@ import "./theme/variables.css";
 setupIonicReact();
 
 const App = () => {
+  const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
+  console.log(currentUser);
 
+  useEffect(() => {
+    fetch("/api/me").then((res) => {
+      if (res.ok) {
+        res.json().then((user) => setCurrentUser(user));
+        setLoading(true);
+      } else {
+        setLoading(true);
+      }
+    });
+  }, []);
 
-
-  return (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/login">
-          <Login />
-        </Route>
-        <Route exact path="/signup">
-          <Signup />
-        </Route>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-
-       <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-
-)}
+  if (!loading) {
+    return <div></div>;
+  } else {
+    return (
+      <IonApp>
+        <IonReactRouter>
+          {currentUser ? (
+            <AuthenticatedApp setCurrentUser={setCurrentUser} />
+          ) : (
+            <UnauthenticatedApp setCurrentUser={setCurrentUser} />
+          )}
+        </IonReactRouter>
+      </IonApp>
+    );
+  }
+};
 
 export default App;

@@ -2,6 +2,7 @@ import { IonContent, IonPage } from "@ionic/react";
 import "../theme/Home.css";
 
 const Home = () => {
+    
 
 
   return (

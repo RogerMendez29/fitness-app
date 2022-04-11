@@ -2,11 +2,11 @@ import { IonContent, IonPage } from "@ionic/react";
 import SignupForm from "../components/SignupForm";
 import "../theme/Login.css";
 
-const Signup = () => {
+const Signup = ({setCurrentUser}) => {
   return (
     <IonPage>
       <IonContent class="login-content">
-        <SignupForm />
+        <SignupForm setCurrentUser={setCurrentUser}/>
       </IonContent>
     </IonPage>
   );

@@ -10,36 +10,58 @@ import {
 } from "@ionic/react";
 import "../theme/LoginForm.css";
 
-const LoginForm = () => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
+const LoginForm = ({ setCurrentUser }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleLogin(e) {
+    e.preventDefault();
+
+    fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email,password }),
+    }).then((res) => {
+      if (res.ok) {
+        res.json().then((user) => {
+          setCurrentUser(user);
+        });
+      }
+    });
+  }
 
   return (
     <div className="login-card">
       <IonCard class="login-form">
-        <IonCardHeader>
-          <IonCardTitle>Fit World</IonCardTitle>
-        </IonCardHeader>
-        <IonInput
-          class="login-input"
-          type="text"
-          placeholder="Email"
-          ref={emailRef}
-          required
-        ></IonInput>
-        <IonInput
-          class="login-input"
-          type="password"
-          placeholder="Password"
-          ref={passwordRef}
-          required
-        ></IonInput>
-        <IonButton expand="block" class="login-btn">
-          Login
-        </IonButton>
-        <IonItem href="signup" className="ion-activated">
-          <IonLabel>Need an account? Sign Up</IonLabel>
-        </IonItem>
+        <form onSubmit={handleLogin}>
+          <IonCardHeader>
+            <IonCardTitle>Fit World</IonCardTitle>
+          </IonCardHeader>
+          <IonInput
+            class="login-input"
+            type="text"
+            placeholder="Email"
+            onIonChange={(e) => setEmail(e.target.value)}
+            value={email}
+            required
+          ></IonInput>
+          <IonInput
+            class="login-input"
+            type="password"
+            placeholder="Password"
+            onIonChange={(e) => setPassword(e.target.value)}
+            value={password}
+            required
+          ></IonInput>
+          <IonButton expand="block" class="login-btn" type='submit'>
+            Login
+          </IonButton>
+          <IonItem href="signup" className="ion-activated">
+            <IonLabel>Need an account? Sign Up</IonLabel>
+          </IonItem>
+        </form>
       </IonCard>
     </div>
   );
