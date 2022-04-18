@@ -1,0 +1,17 @@
+.nav-link {
+    width: 40px;
+    text-decoration: none;
+    color: black;
+    margin:10px;
+    font-size: 20px
+    
+}
+.nav-link:hover {
+    background-color:rgb(175, 175, 175);
+    border-radius: 30%;
+
+}
+
+.active {
+    font-weight:bold
+}

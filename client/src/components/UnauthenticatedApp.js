@@ -9,12 +9,16 @@ import {
   IonTabButton,
   IonTabs,
   setupIonicReact,
+  
 } from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 
 function UnauthenticatedApp({ setCurrentUser }) {
   return (
+    <IonReactRouter>
     <IonRouterOutlet>
       <Route exact path="/login">
         <Login setCurrentUser={setCurrentUser} />
@@ -24,6 +28,7 @@ function UnauthenticatedApp({ setCurrentUser }) {
       </Route>
       <Redirect to="/login" />
     </IonRouterOutlet>
+    </IonReactRouter>
   );
 }
 

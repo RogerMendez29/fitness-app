@@ -11,7 +11,12 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import Home from "../pages/Home";
+import Calender from "../pages/Calender";
+import Profile from "../pages/Profile";
+
+
 import NavBar from "../components/Navbar";
+import { IonReactRouter } from "@ionic/react-router";
 
 function AuthenticatedApp({ setCurrentUser }) {
   function handleLogout() {
@@ -27,14 +32,19 @@ function AuthenticatedApp({ setCurrentUser }) {
 
   return (
     <div>
-      <NavBar logout={handleLogout}/>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
+      <IonReactRouter>
+        <NavBar logout={handleLogout} />
 
-        <Redirect to="/home" />
-      </IonRouterOutlet>
+        <IonRouterOutlet>
+          <Route exact path="/home" component={Home} />
+          <Route exact path="/calender" component={Calender} />
+          <Route exact path="/profile">
+            <Profile />
+          </Route>
+
+          <Redirect to="/home" />
+        </IonRouterOutlet>
+      </IonReactRouter>
     </div>
   );
 }

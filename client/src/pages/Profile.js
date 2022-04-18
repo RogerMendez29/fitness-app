@@ -1,17 +1,17 @@
 import { IonContent, IonPage } from "@ionic/react";
-import "../theme/Home.css";
+import "../theme/Profile.css";
 
-const Home = () => {
+const Profile = () => {
     
 
 
   return (
     <IonPage>
-      <IonContent class="home-content">
+      <IonContent class="profile-content">
         Home Page
       </IonContent>
     </IonPage>
   );
 };
 
-export default Home;
+export default Profile;
