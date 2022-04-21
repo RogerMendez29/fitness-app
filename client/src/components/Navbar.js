@@ -26,10 +26,11 @@ function NavBar({ logout }) {
           Calender
         </NavLink>
         <NavLink className="nav-link" to="/profile">
-          profile
+          Profile
         </NavLink>
+        <IonButton className="">Post a Workout</IonButton>
 
-        <IonButton onClick={logout} slot="end">
+        <IonButton onClick={logout} className="" slot="end">
           Logout
         </IonButton>
       </IonToolbar>

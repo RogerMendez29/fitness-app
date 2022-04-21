@@ -1,0 +1,42 @@
+.feed-col{
+    margin-left:30%
+}
+
+.profile-col{
+    margin-left:30%
+}
+
+.home-content{
+    height:100%;
+    width:38%;
+    margin-left:33%;
+    border: 1px solid rgb(238, 233, 233)
+
+}
+
+.profile-page{
+    display: flex!important;
+    justify-content: center !important;
+    align-items: center!important;
+}
+
+.post-container{
+    position: relative;
+    width: 100%;
+    /* height: 25%; */
+    /* border-bottom: 1px solid rgb(238, 233, 233) */
+
+}
+
+.toggle-form{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.workout-form{
+    margin: 20px
+}
+
+
+
