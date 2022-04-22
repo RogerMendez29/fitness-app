@@ -14,11 +14,10 @@ import Home from "../pages/Home";
 import Calender from "../pages/Calender";
 import Profile from "../pages/Profile";
 
-
 import NavBar from "../components/Navbar";
 import { IonReactRouter } from "@ionic/react-router";
 
-function AuthenticatedApp({ setCurrentUser }) {
+function AuthenticatedApp({ setCurrentUser, currentUser}) {
   function handleLogout() {
     fetch(`/api/logout`, {
       method: "DELETE",
@@ -33,11 +32,15 @@ function AuthenticatedApp({ setCurrentUser }) {
   return (
     <div>
       <IonReactRouter>
-        <NavBar logout={handleLogout} />
+        <NavBar logout={handleLogout} currentUser={currentUser} />
 
         <IonRouterOutlet>
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/calender" component={Calender} />
+          <Route exact path="/home">
+            <Home />
+          </Route>
+          <Route exact path="/calender">
+            <Calender />
+          </Route>
           <Route exact path="/profile">
             <Profile />
           </Route>

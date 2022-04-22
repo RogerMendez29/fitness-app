@@ -1,23 +1,21 @@
-.feed-col{
-    margin-left:30%
-}
 
-.profile-col{
-    margin-left:30%
-}
+
+
 
 .home-content{
     height:100%;
-    width:38%;
-    margin-left:33%;
-    border: 1px solid rgb(238, 233, 233)
+    /* width:38%; */
+    /* margin-left:33%; */
+    border-left: 1px solid rgb(238, 233, 233)
 
 }
 
 .profile-page{
-    display: flex!important;
-    justify-content: center !important;
-    align-items: center!important;
+    /* display: flex!important; */
+    /* justify-content: center !important; */
+    /* align-items: center!important; */
+    display:inline-block;
+
 }
 
 .post-container{
@@ -38,5 +36,22 @@
     margin: 20px
 }
 
+.suggested-users-cont{
+    height:100%;
+    /* width: 30%; */
+    
+}
 
+
+
+.row{
+    height: calc(100vh);
+    
+
+
+}
+
+.workout-container{
+    margin-top: 30px;
+}
 

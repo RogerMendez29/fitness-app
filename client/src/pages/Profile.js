@@ -21,11 +21,11 @@ const Profile = () => {
     <IonPage className="profile-page">
       <IonContent class="profile-page-content">
         <div className="profile-content">
-          <div className="image-container">
-            <img
-              className="image"
-              src="https://res.cloudinary.com/dpkrqs9rs/image/upload/v1637085098/Profile_avatar_placeholder_large_ky4gfw.png"
-            />
+          <div className="profile-data">
+            <div className="image-container">
+            
+            </div>
+            
             <IonButton>upload</IonButton>
             <IonButton className="edit-profile-btn">edit profile</IonButton>
 

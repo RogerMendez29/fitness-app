@@ -1,18 +1,23 @@
 .nav-link {
-    width: 40px;
     text-decoration: none;
     color: black;
     margin:15px;
     margin-top:15px;
-    font-size: 20px
+    font-size: 23px
     
 }
 .nav-link:hover {
-    background-color:rgb(175, 175, 175);
-    border-radius: 30%;
+    
+    background-color:rgb(224, 221, 221);
+    border-radius: 20%;
 
 }
 
 .active {
     font-weight:bold
+}
+
+.popover-link{
+    text-decoration: none;
+    color:rgb(60, 58, 58);
 }

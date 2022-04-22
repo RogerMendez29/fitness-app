@@ -1,4 +1,4 @@
 ion-content{
-    margin: top 100px !important;
+    display: inline;
     --padding-top: 60px 
 }

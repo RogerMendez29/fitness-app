@@ -41,7 +41,6 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
-  console.log(currentUser);
 
   useEffect(() => {
     fetch("/api/me").then((res) => {
@@ -60,7 +59,7 @@ const App = () => {
     return (
       <IonApp>
         {currentUser ? (
-          <AuthenticatedApp setCurrentUser={setCurrentUser} />
+          <AuthenticatedApp setCurrentUser={setCurrentUser} currentUser={currentUser} />
         ) : (
           <UnauthenticatedApp setCurrentUser={setCurrentUser} />
         )}
