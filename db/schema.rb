@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 2022_04_22_190241) do
     t.integer "weight"
     t.integer "bodyfat"
     t.string "fitness_level"
-    t.string "profile_avatar"
+    t.string "profile_photo"
     t.string "profile_thumbnail"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -54,4 +54,23 @@
 .workout-container{
     margin-top: 30px;
 }
+.users-container{
+    width: 40%;
+    border-radius: 8%;
 
+}
+.user-card{
+    height: 300px !important;
+
+}
+
+.follow-btn{
+
+    position: absolute;
+    right: 0;
+    top:0
+}
+
+.ionicon{
+    height:50px
+}

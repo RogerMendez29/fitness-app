@@ -18,8 +18,8 @@ function NavBar({ logout, currentUser }) {
   console.log(currentUser);
 
   function profile_image() {
-    return currentUser.profile?.profile_avatar ? (
-      <img src={currentUser.profile.profile_picture_thumbnail_url} />
+    return currentUser.profile?.profile_thumbnail ? (
+      <img src={currentUser.profile.profile_thumbnail} />
     ) : (
       <svg
         xmlns="http://www.w3.org/2000/svg"

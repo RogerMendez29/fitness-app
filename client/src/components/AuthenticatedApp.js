@@ -36,7 +36,7 @@ function AuthenticatedApp({ setCurrentUser, currentUser}) {
 
         <IonRouterOutlet>
           <Route exact path="/home">
-            <Home />
+            <Home currentUser={currentUser}/>
           </Route>
           <Route exact path="/calender">
             <Calender />
