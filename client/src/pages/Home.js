@@ -1,5 +1,6 @@
 import "../theme/Home.css";
 import { IonGrid, IonRow, IonCol, IonContent } from "@ionic/react";
+import { useHistory } from "react-router-dom";
 import {
   IonHeader,
   IonPage,
@@ -23,62 +24,31 @@ import PostWorkoutForm from "../components/PostWorkoutForm";
 
 import { useState, useEffect } from "react";
 
-const Home = ({ currentUser }) => {
-  const [creating, setCreating] = useState(false);
-  const [workouts, setWorkouts] = useState([]);
+const Home = ({ currentUser, renderWorkouts, workouts }) => {
   const [users, setUsers] = useState([]);
 
+  let history = useHistory();
+
+  function navToUserPage(id) {
+    history.push(`/user_page/${id}`);
+  }
+
   useEffect(() => {
-    fetch("/api/workouts")
-      .then((res) => res.json())
-      .then((data) => setWorkouts(data));
     fetch("/api/users")
       .then((res) => res.json())
       .then((data) => setUsers(data));
   }, []);
 
-  function renderWorkouts() {
-    const workoutCards = workouts?.map((workout) => {
-      if (workout?.workout_exercises?.length > 0) {
-        return (
-          <ion-card>
-            <ion-card-header>
-              <ion-card-subtitle> {workout.posted_by}</ion-card-subtitle>
-              <ion-card-title>{workout.name}</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              {workout.workout_exercises?.map((exercise) => {
-                return (
-                  <IonList>
-                    <IonItem>
-                      <IonLabel> {exercise.name}</IonLabel>
-                      <IonLabel> Sets: {exercise.sets}</IonLabel>
-                      <IonLabel> Reps: {exercise.reps}</IonLabel>
-                      <IonLabel> Rest: {exercise.rest}</IonLabel>
-
-                      <IonLabel> Weight: {exercise.weight}</IonLabel>
-                      <IonLabel> Time: {exercise.time} s</IonLabel>
-                      <IonLabel> Distance: {exercise.distance}</IonLabel>
-                    </IonItem>
-                  </IonList>
-                );
-              })}
-            </ion-card-content>
-          </ion-card>
-        );
-      } else {
-        return null;
-      }
-    });
-    return workoutCards;
-  }
-  console.log(currentUser.id);
-
   function renderUsers() {
     const userCards = users.map((user) => {
       if (user.profile.first_name && user.id !== currentUser.id) {
         return (
-          <ion-card color="medium" className="user-card">
+          <ion-card
+            onClick={() => navToUserPage(user.id)}
+            key={user.id}
+            color="medium"
+            className="user-card"
+          >
             <ion-card-header>
               {user_image(user)}
               <ion-card-subtitle>
@@ -125,9 +95,11 @@ const Home = ({ currentUser }) => {
             </IonCol>
             <IonCol className="right-col">
               <div className="home-content">
-                <PostWorkoutForm />
+                <PostWorkoutForm currentUser={currentUser} />
 
-                <div className="workout-container">{renderWorkouts()}</div>
+                <div className="workout-container">
+                  {renderWorkouts(workouts)}
+                </div>
               </div>
             </IonCol>
           </IonRow>

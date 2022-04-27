@@ -3,8 +3,9 @@ class User < ApplicationRecord
 
     
     has_one :profile
-    has_one :calender
+    has_many :calenders
     has_many :workouts
+    has_many :workout_exercises, through: :workouts
 
 
     

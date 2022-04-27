@@ -6,12 +6,32 @@
 # Exercise.create(name:"Sit  Up", category: "conditioning", difficulty:"intermediate", description: "performed from a supine position by raising the torso to a sitting position and returning to the original position without using the arms or lifting the feet")
 
 # Workout.create(name:"Every day Workout", difficulty:"easy")
-# Workout.create(name:"Early Morning Workout", difficulty:"easy")
+# Workout.create(name:"second", difficulty:"easy", user_id:1)
 
 
-# WorkoutExercise.create(workout_id:1, exercise_id:2, sets:2, reps:10, rest:20)
-WorkoutExercise.create(workout_id:1, exercise_id:1, sets:2, reps:10, rest:20)
-WorkoutExercise.create(workout_id:1, exercise_id:1, sets:2, reps:10, rest:20)
+# WorkoutExercise.create(workout_id:33, exercise_id:2, sets:2, reps:10, rest:20)
+# WorkoutExercise.create(workout_id:33, exercise_id:1, sets:2, reps:10, rest:20)
+# WorkoutExercise.create(workout_id:33, exercise_id:1, sets:2, reps:10, rest:20)
+
+
+
+# require 'uri'
+# require 'net/http'
+# require 'openssl'
+
+# url = URI("https://exercisedb.p.rapidapi.com/exercises")
+
+# http = Net::HTTP.new(url.host, url.port)
+# http.use_ssl = true
+# http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+# request = Net::HTTP::Get.new(url)
+# request["X-RapidAPI-Host"] = 'exercisedb.p.rapidapi.com'
+# request["X-RapidAPI-Key"] = '7ead1705a0msh00b7e2f4d1382afp194615jsnfc2379477db8'
+
+# response = http.request(request)
+# puts response.read_body.JSON.parse[1]
+
 
 
 

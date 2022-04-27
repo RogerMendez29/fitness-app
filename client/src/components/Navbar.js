@@ -58,7 +58,6 @@ function NavBar({ logout, currentUser }) {
         <IonPopover
           onDidPresent={initPopover}
           trigger="trigger-button"
-          // triggerAction="hover"
         >
           <IonList>
             <IonItem>

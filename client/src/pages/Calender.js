@@ -33,14 +33,34 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const events = [];
 
-function Calender() {
+
+
+function Calender({ currentUser }) {
+  console.log(currentUser.calenders);
+
   const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
-  const [allEvents, setAllEvents] = useState(events);
+  const [allEvents, setAllEvents] = useState(currentUser.calenders);
+
+  
 
   function handleAddEvent() {
-    setAllEvents([...allEvents, newEvent]);
+    fetch("/api/calenders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: currentUser.id,
+        workout_id: 1,
+        title: newEvent.title,
+        start_date: newEvent.start,
+        end_date: newEvent.end,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        res.json();
+        setAllEvents([...allEvents, newEvent]);
+      }
+    });
   }
 
   return (
@@ -62,7 +82,9 @@ function Calender() {
             placeholderText="Start Date"
             style={{ marginRight: "10px" }}
             selected={newEvent.start}
-            onChange={(start) => setNewEvent({ ...newEvent, start })}
+            onChange={(start) => {
+              setNewEvent({ ...newEvent, start });
+            }}
           />
           <DatePicker
             placeholderText="End Date"
@@ -76,8 +98,8 @@ function Calender() {
         <Calendar
           localizer={localizer}
           events={allEvents}
-          startAccessor="start"
-          endAccessor="end"
+          startAccessor="start_date"
+          endAccessor="end_date"
           style={{ height: 500, margin: "50px" }}
         />
       </IonContent>

@@ -14,7 +14,7 @@ import { IonReactRouter } from "@ionic/react-router";
 
 import AuthenticatedApp from "./components/AuthenticatedApp";
 import UnauthenticatedApp from "./components/UnauthenticatedApp";
-import "./theme/app.css"
+import "./theme/app.css";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -41,7 +41,6 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
-
   useEffect(() => {
     fetch("/api/me").then((res) => {
       if (res.ok) {
@@ -58,11 +57,16 @@ const App = () => {
   } else {
     return (
       <IonApp>
-        {currentUser ? (
-          <AuthenticatedApp setCurrentUser={setCurrentUser} currentUser={currentUser} />
-        ) : (
-          <UnauthenticatedApp setCurrentUser={setCurrentUser} />
-        )}
+        <IonReactRouter>
+            {currentUser ? (
+              <AuthenticatedApp
+                setCurrentUser={setCurrentUser}
+                currentUser={currentUser}
+              />
+            ) : (
+              <UnauthenticatedApp setCurrentUser={setCurrentUser} />
+            )}
+        </IonReactRouter>
       </IonApp>
     );
   }

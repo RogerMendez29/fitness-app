@@ -1,3 +1,3 @@
 class CalenderSerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :date, :time, :workout_id
+  attributes  :title, :user_id, :workout_id, :start_date, :end_date
 end
