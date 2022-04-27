@@ -10,17 +10,11 @@ import {
   IonTabs,
   setupIonicReact,
 } from "@ionic/react";
+import { useAuth } from "../components/contexts/AuthContext";
 import Profile from "./Profile";
 
-function UserPage({ currentUser, workouts, setCurrentUser, renderWorkouts }) {
-  return (
-    <Profile
-      workouts={workouts}
-      currentUser={currentUser}
-      renderWorkouts={renderWorkouts}
-      setCurrentUser={setCurrentUser}
-    />
-  );
+function UserPage() {
+  return <Profile />;
 }
 
 export default UserPage;

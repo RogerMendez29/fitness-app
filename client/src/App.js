@@ -1,5 +1,6 @@
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { AuthProvider } from "./components/contexts/AuthContext.js";
 import {
   IonApp,
   IonIcon,
@@ -12,8 +13,12 @@ import {
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 
-import AuthenticatedApp from "./components/AuthenticatedApp";
-import UnauthenticatedApp from "./components/UnauthenticatedApp";
+import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Content from "./components/Content";
+
 import "./theme/app.css";
 
 /* Core CSS required for Ionic components to work properly */
@@ -38,38 +43,33 @@ import "./theme/variables.css";
 setupIonicReact();
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    fetch("/api/me").then((res) => {
-      if (res.ok) {
-        res.json().then((user) => setCurrentUser(user));
-        setLoading(true);
-      } else {
-        setLoading(true);
-      }
-    });
-  }, []);
-
-  if (!loading) {
-    return <div></div>;
-  } else {
-    return (
-      <IonApp>
+  return (
+    <IonApp>
+      <AuthProvider>
         <IonReactRouter>
-            {currentUser ? (
-              <AuthenticatedApp
-                setCurrentUser={setCurrentUser}
-                currentUser={currentUser}
-              />
-            ) : (
-              <UnauthenticatedApp setCurrentUser={setCurrentUser} />
-            )}
+          <IonRouterOutlet>
+            <Switch>
+              <Route exact path="/login">
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              </Route>
+              <Route exact path="/signup">
+                <PublicRoute>
+                  <Signup />
+                </PublicRoute>
+              </Route>
+              <Route path="/">
+                <PrivateRoute>
+                  <Content></Content>
+                </PrivateRoute>
+              </Route>
+            </Switch>
+          </IonRouterOutlet>
         </IonReactRouter>
-      </IonApp>
-    );
-  }
+      </AuthProvider>
+    </IonApp>
+  );
 };
 
 export default App;

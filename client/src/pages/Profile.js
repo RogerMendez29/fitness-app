@@ -18,8 +18,11 @@ import {
   IonInput,
   IonTextarea,
 } from "@ionic/react";
+import { useAuth } from "../components/contexts/AuthContext";
+import {renderWorkouts} from "../components/Utils";
 
-const Profile = ({ currentUser, renderWorkouts, workouts }) => {
+const Profile = () => {
+  const { currentUser, workouts} = useAuth();
   const [editing, setEditing] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

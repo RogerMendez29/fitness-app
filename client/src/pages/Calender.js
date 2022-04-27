@@ -7,6 +7,8 @@ import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useAuth } from "../components/contexts/AuthContext";
+
 // import "./App.css";
 
 import {
@@ -33,16 +35,11 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-
-
-
-function Calender({ currentUser }) {
-  console.log(currentUser.calenders);
+function Calender() {
+  const { currentUser } = useAuth();
 
   const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "" });
   const [allEvents, setAllEvents] = useState(currentUser.calenders);
-
-  
 
   function handleAddEvent() {
     fetch("/api/calenders", {

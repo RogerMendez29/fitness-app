@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import { useAuth } from "../components/contexts/AuthContext";
+
 import {
   IonInput,
   IonCard,
@@ -10,7 +12,9 @@ import {
 } from "@ionic/react";
 import "../theme/LoginForm.css";
 
-const LoginForm = ({ setCurrentUser }) => {
+const LoginForm = () => {
+  const {setCurrentUser} = useAuth()
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,7 +26,7 @@ const LoginForm = ({ setCurrentUser }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email,password }),
+      body: JSON.stringify({ email, password }),
     }).then((res) => {
       if (res.ok) {
         res.json().then((user) => {
@@ -55,7 +59,7 @@ const LoginForm = ({ setCurrentUser }) => {
             value={password}
             required
           ></IonInput>
-          <IonButton expand="block" class="login-btn" type='submit'>
+          <IonButton expand="block" class="login-btn" type="submit">
             Login
           </IonButton>
           <IonItem href="signup" className="ion-activated">

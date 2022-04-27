@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ellipse, square, triangle } from "ionicons/icons";
+
 import {
   IonHeader,
   IonTitle,
@@ -11,11 +13,18 @@ import {
   IonList,
   IonItem,
   IonNav,
+  IonTabs,
+  IonRouterOutlet,
+  IonTabBar,
+  IonIcon,
+  IonLabel,
+  IonTabButton,
 } from "@ionic/react";
 import "../theme/Navbar.css";
+import { useAuth } from "./contexts/AuthContext";
 
-function NavBar({ logout, currentUser }) {
-  console.log(currentUser);
+function NavBar() {
+  const { handleLogout, currentUser } = useAuth();
 
   function profile_image() {
     return currentUser.profile?.profile_thumbnail ? (
@@ -37,41 +46,40 @@ function NavBar({ logout, currentUser }) {
     const logoutBtn = popover.querySelector("#logout-btn");
 
     logoutBtn.addEventListener("click", () => {
-      logout();
+      handleLogout();
       popover.dismiss();
     });
   }
   return (
-    <IonHeader>
-      <IonToolbar className="toolbar">
-        <NavLink className="nav-link" to="/home">
-          Home
-        </NavLink>
+    <div>
+      <IonTabBar slot="bottom">
+        <IonTabButton tab="tab1" href="/home">
+          <IonIcon icon={triangle} />
+          <IonLabel>Tab 1</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="tab2" href="/calender">
+          <IonIcon icon={ellipse} />
+          <IonLabel>Tab 2</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="tab3" href="/profile">
+          <IonIcon icon={square} />
+          <IonLabel>Tab 3</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
+      <IonHeader>
+        <IonToolbar className="toolbar">
+          <NavLink className="nav-link" to="/home">
+            Home
+          </NavLink>
 
-        <NavLink className="nav-link" to="/calender">
-          Calender
-        </NavLink>
+          <NavLink className="nav-link" to="/calender">
+            Calender
+          </NavLink>
 
-        <IonAvatar className="avatar" slot="end" id="trigger-button">
-          {profile_image()}
-        </IonAvatar>
-        <IonPopover
-          onDidPresent={initPopover}
-          trigger="trigger-button"
-        >
-          <IonList>
-            <IonItem>
-              <NavLink className="popover-link" to="/profile">
-                Profile
-              </NavLink>
-            </IonItem>
-            <IonItem button id="logout-btn">
-              <IonButton> Log Out</IonButton>
-            </IonItem>
-          </IonList>
-        </IonPopover>
-      </IonToolbar>
-    </IonHeader>
+          
+        </IonToolbar>
+      </IonHeader>
+    </div>
   );
 }
 

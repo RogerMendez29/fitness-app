@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import { useAuth } from "../components/contexts/AuthContext";
+
 import {
   IonInput,
   IonCard,
@@ -10,7 +12,9 @@ import {
 } from "@ionic/react";
 import "../theme/LoginForm.css";
 
-const SignupForm = ({setCurrentUser}) => {
+const SignupForm = () => {
+  const {setCurrentUser} = useAuth()
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState();
