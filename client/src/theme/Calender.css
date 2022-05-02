@@ -1,4 +1,20 @@
-.date-box{
-    height:25px;
-    width:25px
+.date-picker-form {
+  height: 20%;
+}
+
+.date-picker-container {
+  display: flex;
+  justify-content: center;
+}
+
+.rbc-calendar * {
+  z-index: 0;
+}
+
+.react-datepicker-wrapper {
+  display: block;
+}
+
+.input{
+    width: 100%;
 }

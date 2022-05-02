@@ -26,6 +26,7 @@ import { RenderUsers } from "../components/Utils";
 import { userImage } from "../components/Utils";
 import { useAuth } from "../components/contexts/AuthContext";
 import { useState, useEffect } from "react";
+import NavBar from "../components/Navbar";
 
 const Home = () => {
   const { currentUser, workouts, users, setUsers } = useAuth();
@@ -44,6 +45,8 @@ const Home = () => {
 
   return (
     <IonPage>
+      {/* <NavBar /> */}
+
       <IonContent class="home-page-content">
         <IonGrid class="home-grid">
           <IonRow className="row ">
@@ -57,7 +60,7 @@ const Home = () => {
             </IonCol>
             <IonCol className="right-col">
               <div className="home-content">
-                <PostWorkoutForm currentUser={currentUser} />
+                <PostWorkoutForm  />
 
                 <div className="workout-container">
                   {renderWorkouts(workouts)}

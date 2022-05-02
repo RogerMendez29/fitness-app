@@ -4,6 +4,25 @@ import { useAuth } from "../components/contexts/AuthContext";
 import { IonButton } from "@ionic/react";
 
 export function renderWorkouts(workouts) {
+  const unwantedKeys = ["id", "workout_id", "exercise_id"];
+
+  // function renderExercise(exercise) {
+  //   const displayKeys = Object.keys(exercise).filter(
+  //     (key) => !unwantedKeys.includes(key)
+  //   );
+  //   displayKeys.unshift(displayKeys.pop());
+
+  //   const exerciseInfo = displayKeys.map((key) => {
+  //     let value = exercise[key];
+  //     return value ? (
+  //       <IonLabel key={displayKeys.indexOf(key)}>
+  //         {key}: {value}
+  //       </IonLabel>
+  //     ) : null;
+  //   });
+  //   return <IonItem key={exercise.id}>{exerciseInfo}</IonItem>;
+  // }
+
   const workoutCards = workouts?.map((workout) => {
     if (workout.workout_exercises?.length > 0) {
       return (
@@ -13,22 +32,46 @@ export function renderWorkouts(workouts) {
             <ion-card-title>{workout.name}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            {workout.workout_exercises?.map((exercise) => {
-              return (
-                <IonList key={exercise.id}>
-                  <IonItem>
-                    <IonLabel> {exercise.name}</IonLabel>
-                    <IonLabel> Sets: {exercise.sets}</IonLabel>
-                    <IonLabel> Reps: {exercise.reps}</IonLabel>
-                    <IonLabel> Rest: {exercise.rest}</IonLabel>
+            <IonList>
+              {workout.workout_exercises?.map((exercise) => {
 
-                    <IonLabel> Weight: {exercise.weight}</IonLabel>
-                    <IonLabel> Time: {exercise.time} s</IonLabel>
-                    <IonLabel> Distance: {exercise.distance}</IonLabel>
-                  </IonItem>
-                </IonList>
-              );
-            })}
+                // return renderExercise(exercise);
+                return (
+                  <IonList key={exercise.id}>
+                    <IonItem>
+                      <IonLabel> {exercise.name}</IonLabel>
+                      {exercise.sets ? (
+                        <IonLabel> Sets: {exercise.sets}</IonLabel>
+                      ) : null}
+                      {exercise.reps ? (
+                        <IonLabel> Reps: {exercise.reps}</IonLabel>
+                      ) : null}
+                      {exercise.rest ? (
+                        <IonLabel> Rest: {exercise.rest}s</IonLabel>
+                      ) : null}
+
+                      {exercise.weight ? (
+                        <IonLabel> Weight: {exercise.weight} Ibs</IonLabel>
+                      ) : null}
+                      {exercise.time ? (
+                        <IonLabel> Time: {exercise.time}minutes</IonLabel>
+                      ) : null}
+                      {exercise.distance ? (
+                        <IonLabel> Distance: {exercise.distance}miles</IonLabel>
+                      ) : null}
+
+                      {/* <IonLabel> Sets: {exercise.sets}</IonLabel> */}
+                      {/* <IonLabel> Reps: {exercise.reps}</IonLabel>
+                      <IonLabel> Rest: {exercise.rest}</IonLabel>
+
+                      <IonLabel> Weight: {exercise.weight}</IonLabel>
+                      <IonLabel> Time: {exercise.time} s</IonLabel>
+                      <IonLabel> Distance: {exercise.time}</IonLabel> */}
+                    </IonItem>
+                  </IonList>
+                );
+              })}
+            </IonList>
           </ion-card-content>
         </ion-card>
       );

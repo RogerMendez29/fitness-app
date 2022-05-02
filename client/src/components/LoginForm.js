@@ -1,6 +1,4 @@
 import React, { useRef, useState } from "react";
-import { useAuth } from "../components/contexts/AuthContext";
-
 import {
   IonInput,
   IonCard,
@@ -10,30 +8,17 @@ import {
   IonItem,
   IonLabel,
 } from "@ionic/react";
+import { useAuth } from "./contexts/AuthContext";
 import "../theme/LoginForm.css";
 
 const LoginForm = () => {
-  const {setCurrentUser} = useAuth()
-  
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   function handleLogin(e) {
     e.preventDefault();
-
-    fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    }).then((res) => {
-      if (res.ok) {
-        res.json().then((user) => {
-          setCurrentUser(user);
-        });
-      }
-    });
+    login(email, password);
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { AuthProvider } from "./components/contexts/AuthContext.js";
 import {

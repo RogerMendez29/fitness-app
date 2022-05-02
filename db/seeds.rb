@@ -1,6 +1,5 @@
 
 
-
 # Exercise.create(name:"Push up", category: "full body", difficulty:"easy", description: "full body exercise that engages many muscles.")
 # Exercise.create(name:"Pull Up", category: "upper body", difficulty:"intermediate", description: "upper body exercise where you grip an overhead bar and lift your body until your chin is above that bar.")
 # Exercise.create(name:"Sit  Up", category: "conditioning", difficulty:"intermediate", description: "performed from a supine position by raising the torso to a sitting position and returning to the original position without using the arms or lifting the feet")
@@ -27,10 +26,27 @@
 
 # request = Net::HTTP::Get.new(url)
 # request["X-RapidAPI-Host"] = 'exercisedb.p.rapidapi.com'
-# request["X-RapidAPI-Key"] = '7ead1705a0msh00b7e2f4d1382afp194615jsnfc2379477db8'
+# request["X-RapidAPI-Key"] = ENV["KEY"]
 
 # response = http.request(request)
-# puts response.read_body.JSON.parse[1]
+# exercises =  response.read_body
+
+# parsedExercises= JSON.parse(exercises)
+
+# puts parsedExercises.first
+
+
+# parsedExercises.each do |exercise|
+
+# Exercise.create(name:"#{exercise["name"]}", gif_url: "#{exercise["gifUrl"]}", equipment:"#{exercise["equipment"]}", target:"#{exercise["target"]}", bodypart:"#{exercise["bodyPart"]}")
+
+# end
+
+
+    
+
+
+
 
 
 

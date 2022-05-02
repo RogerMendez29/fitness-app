@@ -10,29 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_26_160312) do
+ActiveRecord::Schema.define(version: 2022_04_29_174805) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "calenders", force: :cascade do |t|
     t.integer "user_id"
-    t.string "start_date"
     t.string "time"
     t.integer "workout_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "end_date"
     t.string "title"
+    t.datetime "start"
+    t.datetime "end"
   end
 
   create_table "exercises", force: :cascade do |t|
     t.string "name"
-    t.string "category"
-    t.string "difficulty"
-    t.string "description"
+    t.string "target"
+    t.string "equipment"
+    t.string "gif_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "bodypart"
   end
 
   create_table "follows", force: :cascade do |t|

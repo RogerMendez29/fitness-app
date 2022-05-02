@@ -19,10 +19,11 @@ import {
   IonTextarea,
 } from "@ionic/react";
 import { useAuth } from "../components/contexts/AuthContext";
-import {renderWorkouts} from "../components/Utils";
+import { renderWorkouts } from "../components/Utils";
+import NavBar from "../components/Navbar";
 
 const Profile = () => {
-  const { currentUser, workouts} = useAuth();
+  const { currentUser, workouts } = useAuth();
   const [editing, setEditing] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -63,6 +64,7 @@ const Profile = () => {
 
   return (
     <IonPage className="profile-page">
+      <NavBar />
       <IonContent class="profile-page-content">
         <div className="profile-content">
           <div className="profile-data">

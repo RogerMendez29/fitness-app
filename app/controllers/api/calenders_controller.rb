@@ -23,6 +23,6 @@ class Api::CalendersController < ApplicationController
     private 
 
     def event_params
-        params.permit(:title, :user_id, :workout_id, :start_date, :end_date)
+        params.permit(:title, :user_id, :workout_id, :start, :end)
     end
 end

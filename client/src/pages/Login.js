@@ -2,13 +2,11 @@ import { IonContent, IonPage } from "@ionic/react";
 import LoginForm from "../components/LoginForm";
 import "../theme/Login.css";
 
-const Login = ({ setCurrentUser }) => {
- 
-
+const Login = () => {
   return (
     <IonPage>
       <IonContent class="login-content">
-        <LoginForm setCurrentUser={setCurrentUser} />
+        <LoginForm />
       </IonContent>
     </IonPage>
   );

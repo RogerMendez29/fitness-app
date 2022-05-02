@@ -45,41 +45,31 @@ function NavBar() {
     const popover = e.target;
     const logoutBtn = popover.querySelector("#logout-btn");
 
-    logoutBtn.addEventListener("click", () => {
+    logoutBtn?.addEventListener("click", () => {
       handleLogout();
       popover.dismiss();
     });
   }
   return (
-    <div>
-      <IonTabBar slot="bottom">
-        <IonTabButton tab="tab1" href="/home">
-          <IonIcon icon={triangle} />
-          <IonLabel>Tab 1</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="tab2" href="/calender">
-          <IonIcon icon={ellipse} />
-          <IonLabel>Tab 2</IonLabel>
-        </IonTabButton>
-        <IonTabButton tab="tab3" href="/profile">
-          <IonIcon icon={square} />
-          <IonLabel>Tab 3</IonLabel>
-        </IonTabButton>
-      </IonTabBar>
-      <IonHeader>
-        <IonToolbar className="toolbar">
-          <NavLink className="nav-link" to="/home">
-            Home
-          </NavLink>
-
-          <NavLink className="nav-link" to="/calender">
-            Calender
-          </NavLink>
-
-          
-        </IonToolbar>
-      </IonHeader>
-    </div>
+    <IonHeader>
+      <IonToolbar className="toolbar">
+        <IonAvatar className="avatar" slot="end" id="trigger-button">
+          {profile_image()}
+        </IonAvatar>
+        <IonPopover onDidPresent={initPopover} trigger="trigger-button">
+          <IonList>
+            <IonItem>
+              <NavLink className="popover-link" to="/profile">
+                Profile
+              </NavLink>
+            </IonItem>
+            <IonItem button id="logout-btn">
+              <IonButton> Log Out</IonButton>
+            </IonItem>
+          </IonList>
+        </IonPopover>
+      </IonToolbar>
+    </IonHeader>
   );
 }
 
