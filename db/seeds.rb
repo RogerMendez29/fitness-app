@@ -42,6 +42,8 @@
 
 # end
 
+# Follow.create(followee_id:2 , follower_id:1)
+Follow.create(followee_id:1 , follower_id:2)
 
     
 

@@ -1,8 +1,15 @@
 class Api::UsersController < ApplicationController
+
+
+    
+
+    
+
     def index
         users = User.all.order(:id)
         render json:users
     end
+
     def show
         if current_user
             render json: current_user,status: :ok
@@ -10,6 +17,13 @@ class Api::UsersController < ApplicationController
             render json: { error: "Currently No Sessions is active"}, status: :unauthorized
         end
     end
+
+    
+    def find
+        user = User.find(params[:id])
+        render json: user, status: :ok
+    end
+
 
     def create
         user = User.create(user_params)

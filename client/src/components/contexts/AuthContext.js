@@ -8,11 +8,15 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [workouts, setWorkouts] = useState([]);
   const [exercises, setExercises] = useState([]);
-
   const [users, setUsers] = useState([]);
+  const [followers, setFollowers] = useState([]);
+  const [followees, setFollowees] = useState([]);
+
+  console.log(followers);
+  console.log(followees);
 
   function login(email, password) {
     fetch("/api/login", {
@@ -55,20 +59,26 @@ export function AuthProvider({ children }) {
       .then((data) => setExercises(data));
     fetch("/api/me").then((res) => {
       if (res.ok) {
-        console.log("good");
-
         res.json().then((user) => {
           setCurrentUser(user);
+          setFollowees(user.followees);
+          setFollowers(user.followers);
           setLoading(false);
         });
+      } else {
+        setLoading(false);
       }
     });
   }, []);
 
   const value = {
+    followees,
+    followers,
     exercises,
     currentUser,
     users,
+    setFollowees,
+    setFollowers,
     setUsers,
     setCurrentUser,
     login,

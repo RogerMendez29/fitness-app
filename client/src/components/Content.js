@@ -21,6 +21,7 @@ import Home from "../pages/Home";
 import Calender from "../pages/Calender";
 import Profile from "../pages/Profile";
 import NavBar from "../components/Navbar";
+import UserPage from "../pages/UserPage";
 
 import { useAuth } from "../components/contexts/AuthContext";
 
@@ -36,10 +37,10 @@ const Content = () => {
               <Calender />
             </Route>
             <Route exact path="/profile">
-              <Profile />
+              <Profile currentUser={currentUser} />
             </Route>
             <Route exact path="/user_page/:id">
-              <Profile />
+              <UserPage />
             </Route>
             <Route path="/home">
               <Home />
@@ -60,9 +61,9 @@ const Content = () => {
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
-      </IonReactRouter>
-      <NavBar />
+      {/* <NavBar /> */}
 
+      </IonReactRouter>
     </div>
   );
 };

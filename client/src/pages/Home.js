@@ -29,23 +29,15 @@ import { useState, useEffect } from "react";
 import NavBar from "../components/Navbar";
 
 const Home = () => {
-  const { currentUser, workouts, users, setUsers } = useAuth();
-
-  let history = useHistory();
-
-  function navToUserPage(id) {
-    history.push(`/user_page/${id}`);
-  }
-
-  useEffect(() => {
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
-  }, []);
+  const { workouts, users } = useAuth();
 
   return (
     <IonPage>
-      {/* <NavBar /> */}
+      {/* <IonHeader> */}
+        {/* <IonToolbar> */}
+          <NavBar />
+        {/* </IonToolbar> */}
+      {/* </IonHeader> */}
 
       <IonContent class="home-page-content">
         <IonGrid class="home-grid">
@@ -60,7 +52,7 @@ const Home = () => {
             </IonCol>
             <IonCol className="right-col">
               <div className="home-content">
-                <PostWorkoutForm  />
+                <PostWorkoutForm />
 
                 <div className="workout-container">
                   {renderWorkouts(workouts)}

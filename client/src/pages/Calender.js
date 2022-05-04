@@ -28,6 +28,8 @@ import {
   IonItem,
   IonSelect,
   IonSelectOption,
+  IonHeader,
+  IonToolbar
 } from "@ionic/react";
 import NavBar from "../components/Navbar";
 
@@ -42,19 +44,12 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const events = [
-  {
-    title: "Conference",
-    start: new Date(2022413000),
-    end: new Date(2022, 4, 20, 0, 0, 0),
-  },
-];
+
 
 // console.log(new Date(2022, 4, 13, 0, 0, 0));
 
 function Calender() {
   const { currentUser } = useAuth();
-  // console.log(currentUser.calenders);
   const userEvents = currentUser.calenders.map((event) => {
     event.start = convertToDate(event.start);
     event.end = convertToDate(event.end);
@@ -95,7 +90,12 @@ function Calender() {
 
   return (
     <IonPage>
-      <NavBar />
+      <IonHeader>
+        <IonToolbar>
+          <NavBar />
+        </IonToolbar>
+      </IonHeader>
+      {/* <NavBar /> */}
       <IonContent>
         <div className="date-picker-container">
           <div className="date-picker-form">

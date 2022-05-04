@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
   namespace :api do
+    post 'uploads/prepare'
+  patch "/me", to: "profiles#upload"
+
+  end
+  namespace :api do
   
   resources :trains
   resources :follows
@@ -12,17 +17,17 @@ Rails.application.routes.draw do
   resources :profiles
   resources :users
 
+  get "/user_page/:id", to: "users#find"
+
+
   get "/me", to: "users#show"
   post "/signup", to: "users#create"
 
   post "/login", to: "sessions#create"
   delete "/logout", to: "sessions#destroy"
 
-  post '/users/:id/follow', to: "users#follow"
-  post '/users/:id/unfollow', to: "users#unfollow"
-
-  post '/users/:id/train', to: "users#train"
-  post '/users/:id/untrain', to: "users#untrain"
+  post '/users/follow/:id', to: "follows#create", as: "follow_user"
+  delete '/users/unfollow/:id', to: "follows#destroy", as: "unfollow_user"
 
   end
 

@@ -50,3 +50,6 @@ group :test do
 end
 
 gem "active_model_serializers", "~> 0.10.12"
+
+gem "cloudinary", "~> 1.23"
+gem "dotenv-rails", "~> 2.7"
