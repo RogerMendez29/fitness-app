@@ -20,25 +20,19 @@ import {
   IonLabel,
   IonSelect,
   IonSelectOption,
+  IonGrid,
+  IonCol,
+  IonRow,
 } from "@ionic/react";
 import { useAuth } from "../components/contexts/AuthContext";
-import { renderWorkouts } from "../components/Utils";
-import NavBar from "../components/Navbar";
 import CloudinaryUpload from "../components/CloudinaryUpload";
+import RenderWorkouts from "../components/RenderWorkouts";
+import EditProfileForm from "../components/EditProfileForm";
 
 const Profile = ({ user, currentUser }) => {
   const { workouts, setCurrentUser } = useAuth();
+
   const [editing, setEditing] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [fitness, setFitness] = useState("");
-  const [weight, setWeight] = useState();
-  const [bodyFat, setBodyFat] = useState();
-  const [height, setHeight] = useState({
-    ft: "",
-    inches: "",
-  });
-  const [bio, setBio] = useState();
 
   function dateJoined() {
     if (user) {
@@ -59,6 +53,7 @@ const Profile = ({ user, currentUser }) => {
       let workoutIds = user?.workouts?.map((workout) => {
         return workout?.id;
       });
+
       let userPosts = workouts?.filter((workout) => {
         return workoutIds.includes(workout.id);
       });
@@ -67,6 +62,7 @@ const Profile = ({ user, currentUser }) => {
       let workoutIds = currentUser?.workouts?.map((workout) => {
         return workout?.id;
       });
+
       let userPosts = workouts?.filter((workout) => {
         return workoutIds.includes(workout.id);
       });
@@ -91,153 +87,82 @@ const Profile = ({ user, currentUser }) => {
         setCurrentUser(user);
       });
   }
-  function handleSubmit(e) {
-    e.preventDefault();
-    fetch(`/api/profiles/${currentUser.profile.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: currentUser.id,
-        first_name: firstName,
-        last_name: lastName,
-        fitness_level: fitness,
-        weight: weight,
-        bodyfat: bodyFat,
-        height: height.ft + height.inches,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        console.log("sucess");
-        res.json();
-      } else {
-        console.log("failed");
-      }
-    });
-  }
+
   function imageLink() {
     if (user) {
-     return user?.profile?.profile_photo ||
-        "https://res.cloudinary.com/dpkrqs9rs/image/upload/v1637085098/Profile_avatar_placeholder_large_ky4gfw.png";
+      return (
+        user?.profile?.profile_photo ||
+        "https://res.cloudinary.com/dpkrqs9rs/image/upload/v1637085098/Profile_avatar_placeholder_large_ky4gfw.png"
+      );
     } else {
-      return currentUser?.profile?.profile_photo ||
-        "https://res.cloudinary.com/dpkrqs9rs/image/upload/v1637085098/Profile_avatar_placeholder_large_ky4gfw.png";
+      return (
+        currentUser?.profile?.profile_photo ||
+        "https://res.cloudinary.com/dpkrqs9rs/image/upload/v1637085098/Profile_avatar_placeholder_large_ky4gfw.png"
+      );
     }
   }
 
   return (
-    <IonPage className="profile-page">
-      {/* <NavBar /> */}
-      <IonContent class="profile-page-content">
-        <div className="profile-content">
-          <div className="profile-data">
-            <div className="image-container">
-              <img className="profile-image" src={imageLink()} />
-              <CloudinaryUpload
-                user={user}
-                preset="nn7aqzhz"
-                buttonText="Upload"
-                handleUpload={handleUpload}
-              />
-              {user ? null : (
-                <IonButton
-                  onClick={() => setEditing(!editing)}
-                  className="edit-profile-btn"
-                >
-                  edit profile
-                </IonButton>
-              )}
+    <IonPage className="">
+      <IonContent class="">
+        <IonGrid className="grid">
+          <IonRow className="">
+            <div className="profile-container">
+              <IonCol size-sm className="left-col">
+                <IonCard className="profile-card">
+                  <img className="profile-image" src={imageLink()} />
+                  <CloudinaryUpload
+                    user={user}
+                    preset="nn7aqzhz"
+                    buttonText="Upload"
+                    handleUpload={handleUpload}
+                  />
+                  {user ? null : (
+                    <IonButton
+                      onClick={() => setEditing(!editing)}
+                      className="edit-profile-btn"
+                    >
+                      {editing ? "Done" : "Edit Profile"}
+                    </IonButton>
+                  )}
+                  <ion-card-header>
+                    <IonCardTitle>
+                      {user
+                        ? user.profile.first_name
+                        : currentUser?.profile.first_name}{" "}
+                      {user
+                        ? user.profile.last_name
+                        : currentUser?.profile.last_name}
+                    </IonCardTitle>
+                    <IonCardSubtitle>
+                      Date Joined: {dateJoined()}
+                    </IonCardSubtitle>
+                    <IonCardSubtitle>followers/following</IonCardSubtitle>
+                  </ion-card-header>
+                  <ion-card-content>
+                    <ion-label>Bio: </ion-label>
+                    No Bio Found
+                  </ion-card-content>
+                </IonCard>
+
+                {editing ? (
+                  <EditProfileForm
+                    currentUser={currentUser}
+                    setEditing={setEditing}
+                    setCurrentUser={setCurrentUser}
+                  />
+                ) : (
+                  <IonCardHeader></IonCardHeader>
+                )}
+              </IonCol>
             </div>
-
-            {editing ? (
-              <form onSubmit={handleSubmit} className="">
-                <IonItem>
-                  <IonInput
-                    value={firstName}
-                    onIonChange={(e) => setFirstName(e.target.value)}
-                    placeholder="First name"
-                  ></IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonInput
-                    value={lastName}
-                    onIonChange={(e) => setLastName(e.target.value)}
-                    placeholder="Last name"
-                  ></IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonLabel>Fitness Level</IonLabel>
-                  <IonSelect
-                    value={fitness}
-                    placeholder="Select One"
-                    onIonChange={(e) => setFitness(e.detail.value)}
-                  >
-                    <IonSelectOption value="Beginner">Beginner</IonSelectOption>
-                    <IonSelectOption value="Intermediate">
-                      Intermediate
-                    </IonSelectOption>
-                    <IonSelectOption value="Advanced">Advanced</IonSelectOption>
-                  </IonSelect>
-                </IonItem>
-
-                <IonItem>
-                  <ion-label>Height</ion-label>
-                  <IonInput
-                    onIonChange={(e) =>
-                      setHeight({ ...height, ft: e.target.value })
-                    }
-                    placeholder="ft"
-                    type="number"
-                  ></IonInput>
-                  <IonInput
-                    onIonChange={(e) =>
-                      setHeight({ ...height, inches: e.target.value })
-                    }
-                    placeholder="inches"
-                    type="number"
-                  ></IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonInput
-                    value={weight}
-                    onIonChange={(e) => setWeight(e.target.value)}
-                    placeholder="Weight"
-                    type="number"
-                  ></IonInput>
-                  <IonInput
-                    value={bodyFat}
-                    onIonChange={(e) => setBodyFat(e.target.value)}
-                    placeholder="Body-fat"
-                    type="number"
-                  ></IonInput>
-                </IonItem>
-                <IonItem>
-                  <IonTextarea
-                    value={bio}
-                    onIonChange={(e) => setBio(e.target.value)}
-                    className="description-box"
-                    placeholder="Bio"
-                  ></IonTextarea>
-                </IonItem>
-                <IonButton type="submit">Submit</IonButton>
-              </form>
-            ) : (
-              <IonCardHeader>
-                <IonCardTitle>
-                  {user
-                    ? user.profile.first_name
-                    : currentUser?.profile.first_name}
-                  {user
-                    ? user.profile.last_name
-                    : currentUser?.profile.last_name}
-                </IonCardTitle>
-                <IonCardSubtitle>Date Joined: {dateJoined()}</IonCardSubtitle>
-                <IonCardSubtitle>followers/following</IonCardSubtitle>
-              </IonCardHeader>
-            )}
-
-            <div>{renderWorkouts(sortUsers())}</div>
-          </div>
-        </div>
+            <div className="user-workouts-container">
+              <IonCol className="right-col">
+                <RenderWorkouts posts={sortUsers()} />
+              </IonCol>
+            </div>
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

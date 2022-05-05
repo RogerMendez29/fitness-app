@@ -15,7 +15,11 @@ class Api::WorkoutsController < ApplicationController
         render json: {error: workout.errors}, status: :unprocessable_entity
         end
         
+    end
 
+    def destroy
+        workout = Workout.find(params[:id])
+        workout.destroy
     end
 
     private 

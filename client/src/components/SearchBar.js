@@ -18,7 +18,7 @@ import {
   IonSearchbar,
 } from "@ionic/react";
 
-function SearchBar({ setExerciseId, wordEntered, setWordEntered }) {
+function SearchBar({ setExerciseId, wordEntered, setWordEntered, exerciseId }) {
   const { exercises } = useAuth();
   const [filteredData, setFilteredData] = useState([]);
 
@@ -60,7 +60,7 @@ function SearchBar({ setExerciseId, wordEntered, setWordEntered }) {
                 key={key}
                 onClick={() => {
                   setWordEntered(value.name);
-                  setExerciseId(value.id);
+                  setExerciseId( value.id);
                   dataContainer.style.display = "none";
                 }}
               >

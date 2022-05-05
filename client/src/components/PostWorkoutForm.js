@@ -16,7 +16,13 @@ import SearchBar from "./SearchBar";
 import { useAuth } from "./contexts/AuthContext";
 
 const PostWorkoutForm = () => {
-  const { currentUser } = useAuth();
+  const {
+    currentUser,
+    workouts,
+    setWorkouts,
+    workoutExercises,
+    setWorkoutExercises,
+  } = useAuth();
   const [exerciseId, setExerciseId] = useState();
   const [workoutId, setWorkoutId] = useState();
   const [wordEntered, setWordEntered] = useState("");
@@ -31,26 +37,8 @@ const PostWorkoutForm = () => {
 
   function postWorkout(event) {
     event.preventDefault();
-    fetch("/api/workouts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: workoutName,
-        difficulty: difficulty,
-        user_id: currentUser.id,
-        description: description,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        setCreatingExercise(!creatingExercise);
-        setCreating(!creating);
-        console.log("success");
-
-        res.json().then((data) => setWorkoutId(data.id));
-      } else {
-        console.log("failed");
-      }
-    });
+    setCreatingExercise(!creatingExercise);
+    setCreating(!creating);
   }
 
   function renderPostBtn() {
@@ -67,10 +55,11 @@ const PostWorkoutForm = () => {
       );
     } else {
       return (
-        <IonButton color="success"
+        <IonButton
+          color="success"
           onClick={() => {
             setCreating(false);
-            setCreatingExercise(false)
+            setCreatingExercise(false);
           }}
           className="toggle-form"
         >
@@ -85,33 +74,70 @@ const PostWorkoutForm = () => {
   }
 
   function createExerciseObj() {
-    let obj = {};
+    let obj = { id: exerciseId };
     let exerciseInfo = exercisesContainer.querySelectorAll("ion-item");
     exerciseInfo.forEach((e) => {
       let label = e.querySelector("ion-label")?.innerHTML;
       obj[label] = e.querySelector("ion-input")?.value;
+      // let id = exerciseId;
     });
     setExercises([...exercises, obj]);
   }
 
+  console.log(exercises);
+  console.log(exerciseId);
+
   function post(e) {
     e.preventDefault();
+    fetch("/api/workouts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: workoutName,
+        difficulty: difficulty,
+        user_id: currentUser.id,
+        description: description,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        setCreatingExercise(!creatingExercise);
+        setCreating(!creating);
 
-    exercises.map((exercise) => {
-      fetch("/api/workout_exercises", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          workout_id: workoutId,
-          exercise_id: exerciseId,
-          sets: exercise.Sets,
-          reps: exercise.Reps,
-          weight: exercise.Weight ,
-          time: exercise.Time,
-          distance: exercise.distance,
-          rest: exercise.Rest,
-        }),
-      });
+        res.json().then((data) => {
+          setWorkoutId(data.id);
+          setWorkouts([...workouts, data]);
+          exercises.map((exercise) => {
+            fetch("/api/workout_exercises", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                workout_id: data.id,
+                exercise_id: exercise.id,
+                sets: exercise.Sets,
+                reps: exercise.Reps,
+                weight: exercise.Weight,
+                time: exercise.Time,
+                distance: exercise.distance,
+                rest: exercise.Rest,
+              }),
+            }).then((res) => {
+              if (res.ok) {
+                setCreatingExercise(false);
+                res.json().then((data) => {
+                  setWorkoutExercises([...workoutExercises, data]);
+                  fetch("/api/workouts")
+                    .then((res) => res.json())
+                    .then((data) => {
+                      setCreating(false);
+                      setWorkouts(data);
+                      setExercises([]);
+                    });
+                });
+              }
+            });
+          });
+        });
+      }
     });
   }
 
@@ -196,14 +222,16 @@ const PostWorkoutForm = () => {
                 setWordEntered("");
               }}
             >
-              Add More
+              Add
             </IonButton>
 
             <IonButton type="submit">Post</IonButton>
           </form>
           {exercises.map((exercise) => (
-            <ion-item key={exercise.id}>
-              <ion-label>{Object.keys(exercise)[0]}</ion-label>
+            <ion-item key={Object.keys(exercise)[1]}>
+              <ion-label key={exercise.id}>
+                {Object.keys(exercise)[1]}
+              </ion-label>
             </ion-item>
           ))}
         </div>

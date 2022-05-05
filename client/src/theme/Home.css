@@ -1,76 +1,61 @@
-
-
-
-
-.home-content{
-    height:100%;
-    /* width:38%; */
-    /* margin-left:33%; */
-    border-left: 1px solid rgb(238, 233, 233)
-
+.home-content {
+  height: 100%;
+  width: 75%;
+  border-left: 1px solid rgb(238, 233, 233);
+  border-right: 1px solid rgb(238, 233, 233);
+  margin: 5%;
+  margin-top: 1%;
 }
 
-.profile-page{
-    /* display: flex!important; */
-    /* justify-content: center !important; */
-    /* align-items: center!important; */
-    display:inline-block;
-
+.profile-page {
+  /* display: flex!important; */
+  /* justify-content: center !important; */
+  /* align-items: center!important; */
+  display: inline-block;
 }
 
-.post-container{
-    position: relative;
-    width: 100%;
-    /* height: 25%; */
-    /* border-bottom: 1px solid rgb(238, 233, 233) */
-
+.post-container {
+  position: relative;
+  width: 100%;
+  /* height: 25%; */
 }
 
-.toggle-form{
-    position: absolute;
-    right: 0;
-    top: 0;
+.toggle-form {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-.workout-form{
-    margin: 20px
+.workout-form {
+  margin: 20px;
 }
 
-.suggested-users-cont{
-    height:100%;
-    /* width: 30%; */
-    
+.suggested-users-cont {
+  height: 100%;
+  /* width: 30%; */
 }
 
-
-
-.row{
-    height: calc(100vh);
-    
-
-
+.row {
+  height: calc(100vh);
 }
 
-.workout-container{
-    margin-top: 30px;
+.workout-container {
+  margin-top: 30px;
 }
-.users-container{
-    width: 40%;
-    border-radius: 8%;
-
+.users-container {
+  /* width: 40%; */
+  border-radius: 8%;
 }
-.user-card{
-    height: 300px !important;
-
+.user-card {
+  height: 300px !important;
 }
 
-.follow-btn{
-
-    position: absolute;
-    right: 0;
-    top:0
+.follow-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-.ionicon{
-    height:50px
+.ionicon {
+  height: 50px;
 }

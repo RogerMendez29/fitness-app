@@ -18,6 +18,8 @@ function UserPage() {
 
   const [user, setUser] = useState();
 
+  
+
   useEffect(() => {
     setUser(null);
     fetch(`/api/user_page/${id}`)

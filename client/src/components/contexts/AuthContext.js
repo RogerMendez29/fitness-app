@@ -14,9 +14,9 @@ export function AuthProvider({ children }) {
   const [users, setUsers] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [followees, setFollowees] = useState([]);
+  const [userPosts, setUserPosts] = useState([]);
+  const [workoutExercises, setWorkoutExercises] = useState([]);
 
-  console.log(followers);
-  console.log(followees);
 
   function login(email, password) {
     fetch("/api/login", {
@@ -57,6 +57,9 @@ export function AuthProvider({ children }) {
     fetch("/api/exercises")
       .then((res) => res.json())
       .then((data) => setExercises(data));
+      fetch("/api/workout_exercises")
+      .then((res) => res.json())
+      .then((data) => setWorkoutExercises(data));
     fetch("/api/me").then((res) => {
       if (res.ok) {
         res.json().then((user) => {
@@ -72,11 +75,14 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = {
+    workoutExercises,
     followees,
     followers,
     exercises,
     currentUser,
     users,
+    setWorkoutExercises,
+    setWorkouts,
     setFollowees,
     setFollowers,
     setUsers,

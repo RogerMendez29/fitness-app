@@ -29,9 +29,8 @@ import {
   IonSelect,
   IonSelectOption,
   IonHeader,
-  IonToolbar
+  IonToolbar,
 } from "@ionic/react";
-import NavBar from "../components/Navbar";
 
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
@@ -43,11 +42,6 @@ const localizer = dateFnsLocalizer({
   getDay,
   locales,
 });
-
-
-
-// console.log(new Date(2022, 4, 13, 0, 0, 0));
-
 function Calender() {
   const { currentUser } = useAuth();
   const userEvents = currentUser.calenders.map((event) => {
@@ -90,12 +84,6 @@ function Calender() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <NavBar />
-        </IonToolbar>
-      </IonHeader>
-      {/* <NavBar /> */}
       <IonContent>
         <div className="date-picker-container">
           <div className="date-picker-form">
