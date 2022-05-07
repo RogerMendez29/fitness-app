@@ -61,7 +61,6 @@ function Calender() {
     workoutId: "",
   });
   const [allEvents, setAllEvents] = useState(userEvents);
-  console.log(newEvent.workoutId);
 
   function handleAddEvent() {
     fetch("/api/calenders", {
@@ -94,7 +93,6 @@ function Calender() {
               className="input"
               type="text"
               placeholder="Add Title"
-              // style={{ width: "20%", marginRight: "10px" }}
               value={newEvent.title}
               onIonChange={(e) =>
                 setNewEvent({ ...newEvent, title: e.target.value })
@@ -104,13 +102,20 @@ function Calender() {
               <IonLabel>Workout</IonLabel>
               <IonSelect
                 value={newEvent.workoutId}
-                onIonChange={(e) =>
-                  setNewEvent({ ...newEvent, workoutId: e.target.value })
-                }
+                onIonChange={(e) => {
+                  setNewEvent({
+                    ...newEvent,
+                    workoutId: e.target.value,
+                  });
+                }}
               >
                 {currentUser.workouts?.map((workout) => {
                   return (
-                    <IonSelectOption key={workout.id} value={workout.id}>
+                    <IonSelectOption
+                      key={workout.id}
+                      value={workout.id}
+                      // value2={workout.name}
+                    >
                       {workout.name}
                     </IonSelectOption>
                   );

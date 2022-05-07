@@ -1,15 +1,47 @@
-import { IonLabel, IonList, IonItem } from "@ionic/react";
+import { IonLabel, IonList, IonItem, IonModal, IonTitle } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/contexts/AuthContext";
 import { IonButton, IonAvatar } from "@ionic/react";
 import "../theme/Utils.css";
+import EditWorkoutForm from "./EditWorkoutForm";
+import EditProfileForm from "./EditWorkoutForm";
+import EditExerciseForm from "./EditExerciseForm";
+import ModalBody from "./ModalBody";
 
-function RenderWorkouts({posts}) {
-  // const unwantedKeys = ["id", "workout_id", "exercise_id"];
-  const { workouts, setWorkouts, setWorkoutExercises, workoutExercises } =
-    useAuth();
+function RenderWorkouts({ posts, setPosts, canModify }) {
+  const [editableWorkout, setEditableWorkout] = useState(new Set());
+  const [editableExercise, setEditableExercise] = useState(new Set());
 
+  const [open, setOpen] = useState(false);
+  const [editingWorkout, setEditingWorkout] = useState(false);
+  const [editingExercise, setEditingExercise] = useState(false);
+  const [exerciseId, setExerciseId] = useState();
+
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  const { workouts, setWorkouts, setCurrentUser, currentUser } = useAuth();
+
+  function handleEdit(id) {
+    if (editableWorkout.has(id)) {
+      editableWorkout.delete(id);
+    } else {
+      editableWorkout.add(id);
+    }
+    setEditableWorkout(new Set([...editableWorkout]));
+  }
+
+  function handleEditExercise(id) {
+    if (editableExercise.has(id)) {
+      editableExercise.delete(id);
+    } else {
+      editableExercise.add(id);
+    }
+    setEditableExercise(new Set([...editableExercise]));
+  }
 
   function handleDelete(id) {
     fetch(`/api/workouts/${id}`, {
@@ -18,33 +50,93 @@ function RenderWorkouts({posts}) {
     }).then((res) => {
       if (res.ok) {
         console.log("success");
-        setWorkouts(workouts.filter((posts) => posts.id !== id));
+
+        let updated = workouts.filter((posts) => posts.id !== id);
+        setWorkouts(updated);
+        setCurrentUser({ ...currentUser, workouts: updated });
       }
     });
   }
 
   const workoutCards = posts?.map((workout) => {
+
     if (workout.workout_exercises?.length > 0) {
       return (
         <ion-card key={workout.id}>
           <ion-card-header>
             <ion-card-subtitle> {workout.posted_by}</ion-card-subtitle>
-            <ion-card-title>{workout.name}</ion-card-title>
+            <ion-card-title>
+              {workout.name} •{" "}
+              <h6 style={{ color: "green", display: "inline" }}>
+                {workout.difficulty}
+              </h6>
+            </ion-card-title>
+            <ion-text color="dark">
+              <h3 style={{ color: "grey" }}>{workout.description}</h3>
+            </ion-text>
           </ion-card-header>
-          <IonButton
-            onClick={() => handleDelete(workout.id)}
-            className="delete-btn"
-            color="danger"
+
+          {canModify || workout.user_id === currentUser.id ? (
+            <div>
+              <IonButton
+                onClick={() => handleDelete(workout.id)}
+                className="delete-btn"
+                color="danger"
+              >
+                Delete
+              </IonButton>
+              <IonButton
+                onClick={() => handleEdit(workout.id)}
+                color="success"
+                className="edit-btn"
+              >
+                {editableWorkout.has(workout.id) ? "Done" : "Edit"}
+              </IonButton>
+            </div>
+          ) : null}
+
+          {editableWorkout.has(workout.id) ? (
+            <EditWorkoutForm
+              setEditableWorkout={setEditableWorkout}
+              post={workout}
+              setEditingWorkout={setEditingWorkout}
+            />
+          ) : null}
+          <IonModal
+            isOpen={open}
+            onDismiss={closeModal}
+            breakpoints={[0, 0.2, 0.5, 0.7]}
+            initialBreakpoint={0.7}
+            backdropBreakpoint={0.2}
           >
-            Delete
-          </IonButton>
+            <ModalBody setOpen={setOpen} id={exerciseId} />
+          </IonModal>
+
           <ion-card-content>
             <IonList>
               {workout.workout_exercises?.map((exercise) => {
-                return (
-                  <IonList key={exercise.id}>
-                    <IonItem>
-                      <IonLabel> {exercise.name}</IonLabel>
+
+                
+                return editableExercise.has(exercise.id) ? (
+                  <EditExerciseForm
+                    setEditableExercise={setEditableExercise}
+                    editableExercise={editableExercise}
+                    key={exercise.id}
+                    setEditingExercise={setEditingExercise}
+                    postedExercise={exercise}
+                  />
+                ) : (
+                  <div key={exercise.id}>
+                    <IonTitle
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setExerciseId(exercise.exercise_id);
+                        setOpen(!open);
+                      }}
+                    >
+                      {exercise.name}
+                    </IonTitle>
+                    <IonItem key={exercise.id}>
                       {exercise.sets ? (
                         <IonLabel> Sets: {exercise.sets}</IonLabel>
                       ) : null}
@@ -64,8 +156,16 @@ function RenderWorkouts({posts}) {
                       {exercise.distance ? (
                         <IonLabel> Distance: {exercise.distance}miles</IonLabel>
                       ) : null}
+                      {canModify || workout.user_id === currentUser.id ? (
+                        <IonButton
+                          onClick={() => handleEditExercise(exercise.id)}
+                          color="success"
+                        >
+                          {editableExercise.has(workout.id) ? "Done" : "Edit"}
+                        </IonButton>
+                      ) : null}
                     </IonItem>
-                  </IonList>
+                  </div>
                 );
               })}
             </IonList>
@@ -76,7 +176,8 @@ function RenderWorkouts({posts}) {
       return null;
     }
   });
+
   return workoutCards;
 }
 
-export default RenderWorkouts
+export default RenderWorkouts;

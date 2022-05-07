@@ -17,7 +17,6 @@ export function AuthProvider({ children }) {
   const [userPosts, setUserPosts] = useState([]);
   const [workoutExercises, setWorkoutExercises] = useState([]);
 
-
   function login(email, password) {
     fetch("/api/login", {
       method: "POST",
@@ -41,8 +40,8 @@ export function AuthProvider({ children }) {
     }).then((res) => {
       if (res.ok) {
         setCurrentUser(null);
-        const event = new CustomEvent("authStateChange");
-        document.dispatchEvent(event);
+        // const event = new CustomEvent("authStateChange");
+        // document.dispatchEvent(event);
       }
     });
   }
@@ -57,7 +56,7 @@ export function AuthProvider({ children }) {
     fetch("/api/exercises")
       .then((res) => res.json())
       .then((data) => setExercises(data));
-      fetch("/api/workout_exercises")
+    fetch("/api/workout_exercises")
       .then((res) => res.json())
       .then((data) => setWorkoutExercises(data));
     fetch("/api/me").then((res) => {

@@ -5,7 +5,14 @@ class Api::WorkoutExercisesController < ApplicationController
         render json:workout_exercises
     end
 
-   
+    def update
+        workout_exercise = WorkoutExercise.find(params[:id])
+        workout_exercise .update(workout_exercises_params)
+        render json: workout_exercise 
+
+        
+      end
+
 
     def create
         workout_exercises = WorkoutExercise.create(workout_exercises_params)

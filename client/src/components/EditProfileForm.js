@@ -26,16 +26,21 @@ import {
 } from "@ionic/react";
 
 function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [fitness, setFitness] = useState("");
-  const [weight, setWeight] = useState();
-  const [bodyFat, setBodyFat] = useState();
+  const [firstName, setFirstName] = useState(currentUser.profile.first_name);
+  const [lastName, setLastName] = useState(currentUser.profile.last_name);
+  const [fitness, setFitness] = useState(currentUser.profile.fitness_level);
+  const [weight, setWeight] = useState(currentUser.profile.weight);
+  const [bodyFat, setBodyFat] = useState(currentUser.profile.bodyfat);
+  const [bio, setBio] = useState(currentUser.profile.bio);
+
+  const firstDigit = String(currentUser.profile.height)[0];
+  const secondDigit = String(currentUser.profile.height)[1];
+
   const [height, setHeight] = useState({
-    ft: "",
-    inches: "",
+    ft: firstDigit,
+    inches: secondDigit,
   });
-  const [bio, setBio] = useState();
+
   function handleSubmit(e) {
     e.preventDefault();
     fetch(`/api/profiles/${currentUser.profile.id}`, {
@@ -49,19 +54,13 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
         weight: weight,
         bodyfat: bodyFat,
         height: height.ft + height.inches,
+        bio: bio,
       }),
     }).then((res) => {
       if (res.ok) {
         setEditing(false);
-        console.log("sucess");
         res.json().then((data) => {
-          fetch("/api/me").then((res) => {
-            if (res.ok) {
-              res.json().then((user) => {
-                setCurrentUser(user);
-              });
-            }
-          });
+          setCurrentUser({ ...currentUser, profile: data });
         });
       }
     });
@@ -97,25 +96,34 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
       </IonItem>
 
       <IonItem>
-        <ion-label>Height</ion-label>
+        <ion-label>Height: ft'</ion-label>
         <IonInput
           onIonChange={(e) => setHeight({ ...height, ft: e.target.value })}
           placeholder="ft"
           type="number"
+          value={height.ft}
         ></IonInput>
+        <ion-label>Inches"</ion-label>
+
         <IonInput
           onIonChange={(e) => setHeight({ ...height, inches: e.target.value })}
           placeholder="inches"
           type="number"
+          value={height.inches}
         ></IonInput>
       </IonItem>
+
       <IonItem>
+        <ion-label>Weigth Ibs</ion-label>
+
         <IonInput
           value={weight}
           onIonChange={(e) => setWeight(e.target.value)}
           placeholder="Weight"
           type="number"
         ></IonInput>
+        <ion-label>Body Fat %</ion-label>
+
         <IonInput
           value={bodyFat}
           onIonChange={(e) => setBodyFat(e.target.value)}

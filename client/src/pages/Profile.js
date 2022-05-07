@@ -29,10 +29,35 @@ import CloudinaryUpload from "../components/CloudinaryUpload";
 import RenderWorkouts from "../components/RenderWorkouts";
 import EditProfileForm from "../components/EditProfileForm";
 
-const Profile = ({ user, currentUser }) => {
+
+
+const Profile = ({
+  user,
+  currentUser,
+  handleFollow,
+  followeeIds,
+  setFolloweeIds,
+}) => {
   const { workouts, setCurrentUser } = useAuth();
 
   const [editing, setEditing] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [followers, setFollowers] = useState(0);
+  const [followees, setFollowees] = useState(0);
+
+
+
+
+  useEffect(() => {
+    if (user) {
+      setFollowers(user?.followers.length);
+      setFollowees(user?.followees.length);
+    } else {
+      setFollowers(currentUser?.followers.length);
+      setFollowees(currentUser?.followees.length);
+    }
+  }, []);
+  console.log();
 
   function dateJoined() {
     if (user) {
@@ -57,6 +82,7 @@ const Profile = ({ user, currentUser }) => {
       let userPosts = workouts?.filter((workout) => {
         return workoutIds.includes(workout.id);
       });
+
       return userPosts;
     } else {
       let workoutIds = currentUser?.workouts?.map((workout) => {
@@ -66,6 +92,7 @@ const Profile = ({ user, currentUser }) => {
       let userPosts = workouts?.filter((workout) => {
         return workoutIds.includes(workout.id);
       });
+
       return userPosts;
     }
   }
@@ -102,6 +129,14 @@ const Profile = ({ user, currentUser }) => {
     }
   }
 
+  const profileTitle = () => {
+    if (user) {
+      return user?.workouts.length === 0 ? "No Posts Available" : "Posts";
+    } else {
+      return currentUser.workouts.length === 0 ? "No Posts Available" : "Posts";
+    }
+  };
+
   return (
     <IonPage className="">
       <IonContent class="">
@@ -109,22 +144,37 @@ const Profile = ({ user, currentUser }) => {
           <IonRow className="">
             <div className="profile-container">
               <IonCol size-sm className="left-col">
+                <IonTitle>Profile</IonTitle>
+
                 <IonCard className="profile-card">
-                  <img className="profile-image" src={imageLink()} />
+                  <div className="image-container">
+                    <img className="profile-image" src={imageLink()} />
+                  </div>
                   <CloudinaryUpload
                     user={user}
                     preset="nn7aqzhz"
                     buttonText="Upload"
                     handleUpload={handleUpload}
                   />
-                  {user ? null : (
+                  {user ? (
                     <IonButton
-                      onClick={() => setEditing(!editing)}
-                      className="edit-profile-btn"
+                      onClick={() => handleFollow(user.id)}
+                      className="user-page-follow"
+                      size="small"
                     >
-                      {editing ? "Done" : "Edit Profile"}
+                      {followeeIds.includes(user.id) ? "Unfollow" : "Follow"}
                     </IonButton>
+                  ) : (
+                    <div>
+                      <IonButton
+                        onClick={() => setEditing(!editing)}
+                        className="edit-profile-btn"
+                      >
+                        {editing ? "Done" : "Edit Profile"}
+                      </IonButton>
+                    </div>
                   )}
+
                   <ion-card-header>
                     <IonCardTitle>
                       {user
@@ -137,11 +187,13 @@ const Profile = ({ user, currentUser }) => {
                     <IonCardSubtitle>
                       Date Joined: {dateJoined()}
                     </IonCardSubtitle>
-                    <IonCardSubtitle>followers/following</IonCardSubtitle>
+                    <IonCardSubtitle>
+                      followers: {followers} following: {followees}
+                    </IonCardSubtitle>
                   </ion-card-header>
                   <ion-card-content>
                     <ion-label>Bio: </ion-label>
-                    No Bio Found
+                    {user ? user?.profile?.bio : currentUser?.profile.bio}
                   </ion-card-content>
                 </IonCard>
 
@@ -158,7 +210,9 @@ const Profile = ({ user, currentUser }) => {
             </div>
             <div className="user-workouts-container">
               <IonCol className="right-col">
-                <RenderWorkouts posts={sortUsers()} />
+                <IonTitle>{profileTitle()}</IonTitle>
+
+                <RenderWorkouts setPosts={setPosts} posts={sortUsers()} />
               </IonCol>
             </div>
           </IonRow>

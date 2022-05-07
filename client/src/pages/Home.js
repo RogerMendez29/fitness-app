@@ -1,5 +1,5 @@
 import "../theme/Home.css";
-import { IonGrid, IonRow, IonCol, IonContent,IonTitle } from "@ionic/react";
+import { IonGrid, IonRow, IonCol, IonContent, IonTitle } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";
 import PostWorkoutForm from "../components/PostWorkoutForm";
@@ -8,8 +8,14 @@ import { useAuth } from "../components/contexts/AuthContext";
 import { useState, useEffect } from "react";
 import RenderWorkouts from "../components/RenderWorkouts";
 
-const Home = () => {
-  const { workouts, users } = useAuth();
+const Home = ({
+  setUser,
+  canModify,
+  handleFollow,
+  followeeIds,
+  setFolloweeIds,
+}) => {
+  const { workouts, users, currentUser } = useAuth();
 
   return (
     <IonPage>
@@ -20,16 +26,22 @@ const Home = () => {
               <div className="suggested-users-cont">
                 <IonTitle>People You Might Like</IonTitle>
                 <div className="users-container">
-                  <RenderUsers users={users} />
+                  <RenderUsers
+                    setFolloweeIds={setFolloweeIds}
+                    followeeIds={followeeIds}
+                    setUser={setUser}
+                    users={users}
+                    handleFollow={handleFollow}
+                  />
                 </div>
               </div>
             </IonCol>
-            <IonCol  className="right-col">
+            <IonCol className="right-col">
               <div className="home-content">
                 <PostWorkoutForm />
 
                 <div className="workout-container">
-                  <RenderWorkouts posts={workouts} />
+                  <RenderWorkouts canModify={canModify} posts={workouts} />
                 </div>
               </div>
             </IonCol>

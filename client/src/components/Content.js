@@ -1,6 +1,7 @@
 import { Route, NavLink, Switch } from "react-router-dom";
 import { ellipse, square, triangle, logout } from "ionicons/icons";
 import { IonReactRouter } from "@ionic/react-router";
+import { useState, useEffect } from "react";
 
 import {
   IonTabs,
@@ -28,6 +29,11 @@ import { useAuth } from "../components/contexts/AuthContext";
 const Content = () => {
   const { handleLogout, currentUser } = useAuth();
 
+  const [user, setUser] = useState(null);
+  const [followeeIds, setFolloweeIds] = useState([]);
+
+  const [canModify, setCanModify] = useState(currentUser.user_can_modify);
+
   function profileImage() {
     return currentUser.profile?.profile_thumbnail ? (
       <IonAvatar className="icon-tab">
@@ -45,6 +51,33 @@ const Content = () => {
     );
   }
 
+  function handleFollow(id) {
+    if (followeeIds.includes(id)) {
+      fetch(`/api/users/unfollow/${id}/`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      }).then((res) => {
+        if (res.ok) {
+          let updateIds = followeeIds.filter((oldId) => oldId !== id);
+          setFolloweeIds(updateIds);
+        }
+      });
+    } else {
+      fetch(`/api/users/follow/${id}/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          followee_id: 1,
+          follower_id: currentUser.id,
+        }),
+      }).then((res) => {
+        if (res.ok) {
+          setFolloweeIds([...followeeIds, id]);
+        }
+      });
+    }
+  }
+
   return (
     <div>
       <IonReactRouter>
@@ -54,13 +87,26 @@ const Content = () => {
               <Calender />
             </Route>
             <Route exact path="/profile">
-              <Profile currentUser={currentUser} />
+              <Profile currentUser= {currentUser} followeeIds= {followeeIds} />
             </Route>
             <Route exact path="/user_page/:id">
-              <UserPage />
+              <UserPage
+                user={user}
+                setUser={setUser}
+                setFolloweeIds={setFolloweeIds}
+                followeeIds={followeeIds}
+                canModify={canModify}
+                handleFollow={handleFollow}
+              />
             </Route>
             <Route path="/home">
-              {Home()}
+              <Home
+                setFolloweeIds={setFolloweeIds}
+                followeeIds={followeeIds}
+                setUser={setUser}
+                canModify={canModify}
+                handleFollow={handleFollow}
+              />
             </Route>
           </IonRouterOutlet>
           <IonTabBar slot="bottom">

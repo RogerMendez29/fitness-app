@@ -18,6 +18,7 @@ import { useAuth } from "./contexts/AuthContext";
 const PostWorkoutForm = () => {
   const {
     currentUser,
+    setCurrentUser,
     workouts,
     setWorkouts,
     workoutExercises,
@@ -84,9 +85,6 @@ const PostWorkoutForm = () => {
     setExercises([...exercises, obj]);
   }
 
-  console.log(exercises);
-  console.log(exerciseId);
-
   function post(e) {
     e.preventDefault();
     fetch("/api/workouts", {
@@ -122,16 +120,27 @@ const PostWorkoutForm = () => {
               }),
             }).then((res) => {
               if (res.ok) {
+                setExercises([]);
+                setCreating(false);
                 setCreatingExercise(false);
                 res.json().then((data) => {
                   setWorkoutExercises([...workoutExercises, data]);
+                  console.log(data);
+
                   fetch("/api/workouts")
                     .then((res) => res.json())
                     .then((data) => {
-                      setCreating(false);
                       setWorkouts(data);
-                      setExercises([]);
                     });
+                  setWorkouts([{ ...workouts, data }]);
+
+                  fetch("/api/me").then((res) => {
+                    if (res.ok) {
+                      res.json().then((user) => {
+                        setCurrentUser(user);
+                      });
+                    }
+                  });
                 });
               }
             });
@@ -227,6 +236,7 @@ const PostWorkoutForm = () => {
 
             <IonButton type="submit">Post</IonButton>
           </form>
+          <IonTitle>Exercises Added:</IonTitle>
           {exercises.map((exercise) => (
             <ion-item key={Object.keys(exercise)[1]}>
               <ion-label key={exercise.id}>

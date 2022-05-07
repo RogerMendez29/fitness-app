@@ -35,7 +35,7 @@ class Api::ProfilesController < ApplicationController
     private 
 
     def profile_params
-        params.permit(:first_name, :last_name, :fitness_level, :weight, :bodyfat, :user_id, :height, :profile_photo, :profile_thumbnail)
+        params.permit(:bio, :first_name, :last_name, :fitness_level, :weight, :bodyfat, :user_id, :height, :profile_photo, :profile_thumbnail,)
     end
 
     def update_profile_urls

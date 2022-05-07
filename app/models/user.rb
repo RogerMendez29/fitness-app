@@ -18,6 +18,6 @@ class User < ApplicationRecord
     
 
     validates :email, presence: true, uniqueness: true
-    validates :phone, numericality: { only_integer: true }, length: {is:10}
+    # validates :phone, numericality: { only_integer: true }, length: {is:10}
 
 end

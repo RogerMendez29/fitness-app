@@ -59,3 +59,11 @@
 .ionicon {
   height: 50px;
 }
+
+
+.edit-btn {
+  position: absolute;
+  top: 0;
+  right: 8%;
+  margin-right: 25px;
+}

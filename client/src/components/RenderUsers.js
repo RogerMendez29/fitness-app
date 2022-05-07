@@ -5,21 +5,30 @@ import { useAuth } from "../components/contexts/AuthContext";
 import { IonButton, IonAvatar } from "@ionic/react";
 import "../theme/Utils.css";
 
-function RenderUsers({ users }) {
-  const [followeeIds, setFolloweeIds] = useState([]);
+function RenderUsers({
+  users,
+  setUser,
+  handleFollow,
+  followeeIds,
+  setFolloweeIds,
+}) {
+  const { currentUser, followees } = useAuth();
 
   useEffect(() => {
     followees.map((followee) => setFolloweeIds([...followeeIds, followee.id]));
   }, []);
 
-  const {
-    currentUser,
-    followees,
-  } = useAuth();
   let history = useHistory();
 
   function navToUserPage(id) {
+    setUser(null);
     history.push(`/user_page/${id}`);
+    console.log(id);
+    fetch(`/api/user_page/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
   }
 
   function userImage(user) {
@@ -45,32 +54,32 @@ function RenderUsers({ users }) {
     );
   }
 
-  function handleFollow(id) {
-    if (followeeIds.includes(id)) {
-      fetch(`/api/users/unfollow/${id}/`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      }).then((res) => {
-        if (res.ok) {
-          let updateIds = followeeIds.filter((oldId) => oldId !== id);
-          setFolloweeIds(updateIds);
-        }
-      });
-    } else {
-      fetch(`/api/users/follow/${id}/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          followee_id: 1,
-          follower_id: currentUser.id,
-        }),
-      }).then((res) => {
-        if (res.ok) {
-          setFolloweeIds([...followeeIds, id]);
-        }
-      });
-    }
-  }
+  // function handleFollow(id) {
+  //   if (followeeIds.includes(id)) {
+  //     fetch(`/api/users/unfollow/${id}/`, {
+  //       method: "DELETE",
+  //       headers: { "Content-Type": "application/json" },
+  //     }).then((res) => {
+  //       if (res.ok) {
+  //         let updateIds = followeeIds.filter((oldId) => oldId !== id);
+  //         setFolloweeIds(updateIds);
+  //       }
+  //     });
+  //   } else {
+  //     fetch(`/api/users/follow/${id}/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         followee_id: 1,
+  //         follower_id: currentUser.id,
+  //       }),
+  //     }).then((res) => {
+  //       if (res.ok) {
+  //         setFolloweeIds([...followeeIds, id]);
+  //       }
+  //     });
+  //   }
+  // }
 
   const userCards = users?.map((user) => {
     if (user.profile.first_name && user.id !== currentUser.id) {
