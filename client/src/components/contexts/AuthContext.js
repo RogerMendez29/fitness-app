@@ -46,6 +46,10 @@ export function AuthProvider({ children }) {
     });
   }
 
+  // let FolloweesIds= followees.map(followee=> followee.id)
+
+  
+
   useEffect(() => {
     fetch("/api/users")
       .then((res) => res.json())

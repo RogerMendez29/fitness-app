@@ -1,4 +1,13 @@
-import { IonLabel, IonList, IonItem, IonModal, IonTitle } from "@ionic/react";
+import {
+  IonLabel,
+  IonList,
+  IonItem,
+  IonModal,
+  IonTitle,
+  IonIcon,
+  IonCard,
+  IonTextarea,
+} from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/contexts/AuthContext";
@@ -8,16 +17,18 @@ import EditWorkoutForm from "./EditWorkoutForm";
 import EditProfileForm from "./EditWorkoutForm";
 import EditExerciseForm from "./EditExerciseForm";
 import ModalBody from "./ModalBody";
+import { ellipsisHorizontalOutline } from "ionicons/icons";
+import CommentBox from "./CommentBox";
 
 function RenderWorkouts({ posts, setPosts, canModify }) {
   const [editableWorkout, setEditableWorkout] = useState(new Set());
   const [editableExercise, setEditableExercise] = useState(new Set());
+  const [openComment, setOpenComment] = useState(new Set());
 
   const [open, setOpen] = useState(false);
   const [editingWorkout, setEditingWorkout] = useState(false);
   const [editingExercise, setEditingExercise] = useState(false);
   const [exerciseId, setExerciseId] = useState();
-
 
   const closeModal = () => {
     setOpen(false);
@@ -43,6 +54,15 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
     setEditableExercise(new Set([...editableExercise]));
   }
 
+  function handleShowBox(id) {
+    if (openComment.has(id)) {
+      openComment.delete(id);
+    } else {
+      openComment.add(id);
+    }
+    setOpenComment(new Set([...openComment]));
+  }
+
   function handleDelete(id) {
     fetch(`/api/workouts/${id}`, {
       method: "DELETE",
@@ -59,7 +79,6 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
   }
 
   const workoutCards = posts?.map((workout) => {
-
     if (workout.workout_exercises?.length > 0) {
       return (
         <ion-card key={workout.id}>
@@ -115,8 +134,6 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
           <ion-card-content>
             <IonList>
               {workout.workout_exercises?.map((exercise) => {
-
-                
                 return editableExercise.has(exercise.id) ? (
                   <EditExerciseForm
                     setEditableExercise={setEditableExercise}
@@ -170,6 +187,53 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
               })}
             </IonList>
           </ion-card-content>
+          <svg
+            style={{ cursor: "pointer" }}
+            onClick={() => handleShowBox(workout.id)}
+            xmlns="http://www.w3.org/2000/svg"
+            className="ionicon"
+            // className="comment-icon"
+            viewBox="0 0 512 512"
+          >
+            <title>Ellipsis Horizontal</title>
+            <circle
+              cx="256"
+              cy="256"
+              r="32"
+              fill="none"
+              stroke="currentColor"
+              strokeMiterlimit="10"
+              strokeWidth="32"
+            />
+            <circle
+              cx="416"
+              cy="256"
+              r="32"
+              fill="none"
+              stroke="currentColor"
+              strokeMiterlimit="10"
+              strokeWidth="32"
+            />
+            <circle
+              cx="96"
+              cy="256"
+              r="32"
+              fill="none"
+              stroke="currentColor"
+              strokeMiterlimit="10"
+              strokeWidth="32"
+            />
+          </svg>
+          {openComment.has(workout.id) ? (
+            <CommentBox
+              workouts={workouts}
+              setWorkouts={setWorkouts}
+              workoutId={workout.id}
+              userId={currentUser.id}
+              comments={workout.comments}
+              setOpenComment={setOpenComment}
+            />
+          ) : null}
         </ion-card>
       );
     } else {

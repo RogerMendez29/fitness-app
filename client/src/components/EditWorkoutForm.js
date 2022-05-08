@@ -3,26 +3,12 @@ import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonToolbar,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
   IonButton,
-  IonTitle,
-  IonCard,
   IonItem,
   IonInput,
   IonTextarea,
-  IonLabel,
   IonSelect,
   IonSelectOption,
-  IonGrid,
-  IonCol,
-  IonRow,
 } from "@ionic/react";
 import { useAuth } from "../components/contexts/AuthContext";
 

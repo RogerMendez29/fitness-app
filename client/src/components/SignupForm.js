@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useAuth } from "../components/contexts/AuthContext";
 
 import {
@@ -13,16 +14,17 @@ import {
 import "../theme/LoginForm.css";
 
 const SignupForm = () => {
-  const {setCurrentUser} = useAuth()
+  const history = useHistory();
 
+  const { setCurrentUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState();
-
-  
-  
-
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
+  function navToSetup() {
+    history.push("/accout-setup");
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -39,6 +41,8 @@ const SignupForm = () => {
       }),
     }).then((res) => {
       if (res.ok) {
+        navToSetup();
+
         res.json().then((user) => {
           setCurrentUser(user);
         });
@@ -85,7 +89,12 @@ const SignupForm = () => {
             value={passwordConfirmation}
             required
           ></IonInput>
-          <IonButton expand="block" class="login-btn" type="submit">
+          <IonButton
+            expand="block"
+            class="login-btn"
+            type="submit"
+            // href="account-setup"
+          >
             Sign up
           </IonButton>
           <IonItem href="login" className="ion-activated">

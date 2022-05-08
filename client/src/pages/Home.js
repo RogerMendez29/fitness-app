@@ -14,8 +14,16 @@ const Home = ({
   handleFollow,
   followeeIds,
   setFolloweeIds,
+  followIdees,
 }) => {
   const { workouts, users, currentUser } = useAuth();
+
+
+  const feed = workouts.filter((workout) =>
+    followeeIds.includes(workout.user_id)
+  );
+
+  console.log(feed);
 
   return (
     <IonPage>
@@ -27,6 +35,7 @@ const Home = ({
                 <IonTitle>People You Might Like</IonTitle>
                 <div className="users-container">
                   <RenderUsers
+                  followIdees={followIdees}
                     setFolloweeIds={setFolloweeIds}
                     followeeIds={followeeIds}
                     setUser={setUser}
@@ -41,7 +50,7 @@ const Home = ({
                 <PostWorkoutForm />
 
                 <div className="workout-container">
-                  <RenderWorkouts canModify={canModify} posts={workouts} />
+                  <RenderWorkouts canModify={canModify} posts={feed} />
                 </div>
               </div>
             </IonCol>

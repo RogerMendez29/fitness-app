@@ -4,7 +4,7 @@ import { useAuth } from "./contexts/AuthContext";
 const PublicRoute = ({ children }) => {
   const { currentUser } = useAuth();
 
-  return currentUser ? <Redirect to="/home" /> : children;
+  return currentUser ? <Redirect to="/account-setup" /> : children;
 };
 
 export default PublicRoute;

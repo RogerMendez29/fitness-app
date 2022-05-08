@@ -11,4 +11,6 @@ class WorkoutSerializer < ActiveModel::Serializer
   
 
   has_many :workout_exercises
+  has_many :comments
+
 end

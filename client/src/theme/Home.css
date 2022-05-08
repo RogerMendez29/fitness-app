@@ -67,3 +67,25 @@
   right: 8%;
   margin-right: 25px;
 }
+
+
+.comment-icon {
+  right: 0;
+}
+
+.comment-image{
+  margin:10px;
+  height: 50%;
+    width: 50%;
+}
+
+.comments{
+    /* margin-top: 5px; */
+    /* width: 300px; */
+    height: 200px;
+    background-color: white;
+    /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+    overflow: hidden;
+    overflow-y: auto;
+  
+}

@@ -53,7 +53,7 @@ function SearchBar({ setExerciseId, wordEntered, setWordEntered, exerciseId }) {
           ref={(element) => (dataContainer = element)}
           className="dataResult"
         >
-          {filteredData.slice(0, 50).map((value, key) => {
+          {filteredData.slice(0, 150).map((value, key) => {
             return (
               <ion-item
                 class="name"

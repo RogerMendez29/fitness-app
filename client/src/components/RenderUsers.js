@@ -1,11 +1,12 @@
 import { IonLabel, IonList, IonItem } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useAuth } from "../components/contexts/AuthContext";
+import { useAuth } from "./contexts/AuthContext";
 import { IonButton, IonAvatar } from "@ionic/react";
 import "../theme/Utils.css";
 
 function RenderUsers({
+  followIdees,
   users,
   setUser,
   handleFollow,
@@ -14,9 +15,12 @@ function RenderUsers({
 }) {
   const { currentUser, followees } = useAuth();
 
-  useEffect(() => {
-    followees.map((followee) => setFolloweeIds([...followeeIds, followee.id]));
-  }, []);
+
+  // useEffect(() => {
+  //   followees.forEach((followee) =>
+  //     setFolloweeIds([...followeeIds, followee.id])
+  //   );
+  // }, []);
 
   let history = useHistory();
 
@@ -53,33 +57,6 @@ function RenderUsers({
       </IonAvatar>
     );
   }
-
-  // function handleFollow(id) {
-  //   if (followeeIds.includes(id)) {
-  //     fetch(`/api/users/unfollow/${id}/`, {
-  //       method: "DELETE",
-  //       headers: { "Content-Type": "application/json" },
-  //     }).then((res) => {
-  //       if (res.ok) {
-  //         let updateIds = followeeIds.filter((oldId) => oldId !== id);
-  //         setFolloweeIds(updateIds);
-  //       }
-  //     });
-  //   } else {
-  //     fetch(`/api/users/follow/${id}/`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         followee_id: 1,
-  //         follower_id: currentUser.id,
-  //       }),
-  //     }).then((res) => {
-  //       if (res.ok) {
-  //         setFolloweeIds([...followeeIds, id]);
-  //       }
-  //     });
-  //   }
-  // }
 
   const userCards = users?.map((user) => {
     if (user.profile.first_name && user.id !== currentUser.id) {

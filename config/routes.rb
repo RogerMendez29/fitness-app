@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   end
   namespace :api do
+  resources :comments
+
   
   resources :trains
   resources :follows

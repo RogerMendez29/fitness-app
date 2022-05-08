@@ -27,12 +27,16 @@ import "../theme/Content.css";
 import { useAuth } from "../components/contexts/AuthContext";
 
 const Content = () => {
-  const { handleLogout, currentUser } = useAuth();
-
+  const { handleLogout, currentUser, followees } = useAuth();
   const [user, setUser] = useState(null);
   const [followeeIds, setFolloweeIds] = useState([]);
-
   const [canModify, setCanModify] = useState(currentUser.user_can_modify);
+
+  console.log(followeeIds);
+
+  useEffect(() => {
+    setFolloweeIds(followees.map((followee) => followee.id));
+  }, []);
 
   function profileImage() {
     return currentUser.profile?.profile_thumbnail ? (
@@ -87,7 +91,7 @@ const Content = () => {
               <Calender />
             </Route>
             <Route exact path="/profile">
-              <Profile currentUser= {currentUser} followeeIds= {followeeIds} />
+              <Profile currentUser={currentUser} followeeIds={followeeIds} />
             </Route>
             <Route exact path="/user_page/:id">
               <UserPage
@@ -98,6 +102,9 @@ const Content = () => {
                 canModify={canModify}
                 handleFollow={handleFollow}
               />
+            </Route>
+            <Route exact path="/account-setup">
+              <div>setup</div>
             </Route>
             <Route path="/home">
               <Home
