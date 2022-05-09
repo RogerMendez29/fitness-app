@@ -2,7 +2,6 @@ import { Route, NavLink, Switch } from "react-router-dom";
 import { ellipse, square, triangle, logout } from "ionicons/icons";
 import { IonReactRouter } from "@ionic/react-router";
 import { useState, useEffect } from "react";
-
 import {
   IonTabs,
   IonRouterOutlet,
@@ -10,29 +9,20 @@ import {
   IonIcon,
   IonLabel,
   IonTabButton,
-  IonPopover,
   IonAvatar,
-  IonToolbar,
-  IonList,
-  IonButton,
-  IonItem,
-  IonHeader,
 } from "@ionic/react";
 import Home from "../pages/Home";
+import Setup from "../pages/Setup";
 import Calender from "../pages/Calender";
 import Profile from "../pages/Profile";
 import UserPage from "../pages/UserPage";
 import "../theme/Content.css";
-
 import { useAuth } from "../components/contexts/AuthContext";
 
 const Content = () => {
-  const { handleLogout, currentUser, followees } = useAuth();
+  const { handleLogout, currentUser, followees,followeeIds,setFolloweeIds } = useAuth();
   const [user, setUser] = useState(null);
-  const [followeeIds, setFolloweeIds] = useState([]);
   const [canModify, setCanModify] = useState(currentUser.user_can_modify);
-
-  console.log(followeeIds);
 
   useEffect(() => {
     setFolloweeIds(followees.map((followee) => followee.id));
@@ -104,6 +94,7 @@ const Content = () => {
               />
             </Route>
             <Route exact path="/account-setup">
+              <Setup />
               <div>setup</div>
             </Route>
             <Route path="/home">

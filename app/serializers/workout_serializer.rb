@@ -1,5 +1,5 @@
 class WorkoutSerializer < ActiveModel::Serializer
-  attributes :id, :name, :difficulty, :description, :user_id, :posted_by
+  attributes :id, :name, :difficulty, :description, :user_id, :posted_by, :thumbnail_url
 
   def posted_by
     first_name = User.find(object.user_id).profile.first_name
@@ -7,6 +7,14 @@ class WorkoutSerializer < ActiveModel::Serializer
     "#{first_name} #{last_name}"
 
 
+  end
+
+  def thumbnail_url
+  
+    user = User.find(object.user_id)
+    profile=user.profile
+    url = profile.profile_thumbnail
+  
   end
   
 

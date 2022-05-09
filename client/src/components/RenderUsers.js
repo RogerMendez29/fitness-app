@@ -15,7 +15,6 @@ function RenderUsers({
 }) {
   const { currentUser, followees } = useAuth();
 
-
   // useEffect(() => {
   //   followees.forEach((followee) =>
   //     setFolloweeIds([...followeeIds, followee.id])
@@ -59,7 +58,11 @@ function RenderUsers({
   }
 
   const userCards = users?.map((user) => {
-    if (user.profile.first_name && user.id !== currentUser.id) {
+    if (
+      user.profile.first_name &&
+      user.id !== currentUser.id &&
+      !followeeIds.includes(user.id)
+    ) {
       return (
         <ion-card key={user.id} color="medium" className="user-card">
           <ion-card-header>

@@ -28,10 +28,7 @@ function CommentBox({
 }) {
   const [user, setUser] = useState();
   const [comment, setComment] = useState("");
-
   const [posts, setPosts] = useState(comments);
-
-  console.log(posts);
 
   useEffect(() => {
     return setPosts(comments);
@@ -53,6 +50,7 @@ function CommentBox({
       .then((data) => {
         // setOpenComment(new Set());
         setPosts([...posts, data]);
+        setComment("")
       });
     //   .then(
     //     fetch("/api/workouts")

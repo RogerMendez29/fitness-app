@@ -29,8 +29,6 @@ import CloudinaryUpload from "../components/CloudinaryUpload";
 import RenderWorkouts from "../components/RenderWorkouts";
 import EditProfileForm from "../components/EditProfileForm";
 
-
-
 const Profile = ({
   user,
   currentUser,
@@ -44,9 +42,6 @@ const Profile = ({
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState(0);
   const [followees, setFollowees] = useState(0);
-
-
-
 
   useEffect(() => {
     if (user) {
@@ -140,76 +135,77 @@ const Profile = ({
   return (
     <IonPage className="">
       <IonContent class="">
-        <IonGrid className="grid">
+        <IonGrid className="">
           <IonRow className="">
-            <div className="profile-container">
-              <IonCol size-sm className="left-col">
-                <IonTitle>Profile</IonTitle>
+            {/* <div className=""> */}
+            <IonCol size="3.5" className="">
+              <IonTitle>Profile</IonTitle>
 
-                <IonCard className="profile-card">
-                  <div className="image-container">
-                    <img className="profile-image" src={imageLink()} />
-                  </div>
-                  <CloudinaryUpload
-                    user={user}
-                    preset="nn7aqzhz"
-                    buttonText="Upload"
-                    handleUpload={handleUpload}
-                  />
-                  {user ? (
-                    <IonButton
-                      onClick={() => handleFollow(user.id)}
-                      className="user-page-follow"
-                      size="small"
-                    >
-                      {followeeIds.includes(user.id) ? "Unfollow" : "Follow"}
-                    </IonButton>
-                  ) : (
-                    <div>
-                      <IonButton
-                        onClick={() => setEditing(!editing)}
-                        className="edit-profile-btn"
-                      >
-                        {editing ? "Done" : "Edit Profile"}
-                      </IonButton>
-                    </div>
-                  )}
-
-                  <ion-card-header>
-                    <IonCardTitle>
-                      {user
-                        ? user.profile.first_name
-                        : currentUser?.profile.first_name}{" "}
-                      {user
-                        ? user.profile.last_name
-                        : currentUser?.profile.last_name}
-                    </IonCardTitle>
-                    <IonCardSubtitle>
-                      Date Joined: {dateJoined()}
-                    </IonCardSubtitle>
-                    <IonCardSubtitle>
-                      followers: {followers} following: {followees}
-                    </IonCardSubtitle>
-                  </ion-card-header>
-                  <ion-card-content>
-                    <ion-label>Bio: </ion-label>
-                    {user ? user?.profile?.bio : currentUser?.profile.bio}
-                  </ion-card-content>
-                </IonCard>
-
-                {editing ? (
-                  <EditProfileForm
-                    currentUser={currentUser}
-                    setEditing={setEditing}
-                    setCurrentUser={setCurrentUser}
-                  />
+              <IonCard className="profile-card">
+                {/* <div className="image-container"> */}
+                <img className="profile-image" src={imageLink()} />
+                {/* </div> */}
+                <CloudinaryUpload
+                  user={user}
+                  preset="nn7aqzhz"
+                  buttonText="Upload"
+                  handleUpload={handleUpload}
+                />
+                {user ? (
+                  <IonButton
+                    onClick={() => handleFollow(user.id)}
+                    className="user-page-follow"
+                    size="small"
+                  >
+                    {followeeIds.includes(user.id) ? "Unfollow" : "Follow"}
+                  </IonButton>
                 ) : (
-                  <IonCardHeader></IonCardHeader>
+                  <div>
+                    <IonButton
+                    style={{margin:"5%"}}
+                      size="small"
+                      onClick={() => setEditing(!editing)}
+                      className="edit-profile-btn"
+                    >
+                      {editing ? "Done" : "Edit Profile"}
+                    </IonButton>
+                  </div>
                 )}
-              </IonCol>
-            </div>
+
+                <ion-card-header>
+                  <IonCardTitle>
+                    {user
+                      ? user.profile.first_name
+                      : currentUser?.profile.first_name}{" "}
+                    {user
+                      ? user.profile.last_name
+                      : currentUser?.profile.last_name}
+                  </IonCardTitle>
+                  <IonCardSubtitle>Date Joined: {dateJoined()}</IonCardSubtitle>
+                  <IonCardSubtitle>
+                    followers: {followers} following: {followees}
+                  </IonCardSubtitle>
+                </ion-card-header>
+                <ion-card-content>
+                  <ion-label>Bio: </ion-label>
+                  {user ? user?.profile?.bio : currentUser?.profile.bio}
+                </ion-card-content>
+              </IonCard>
+
+              {editing ? (
+                <EditProfileForm
+                  editing={editing}
+                  currentUser={currentUser}
+                  setEditing={setEditing}
+                  setCurrentUser={setCurrentUser}
+                />
+              ) : (
+                <IonCardHeader></IonCardHeader>
+              )}
+            </IonCol>
+            {/* </div> */}
             <div className="user-workouts-container">
-              <IonCol className="right-col">
+              <IonCol size="5" className="">
                 <IonTitle>{profileTitle()}</IonTitle>
 
                 <RenderWorkouts setPosts={setPosts} posts={sortUsers()} />

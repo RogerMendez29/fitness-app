@@ -12,7 +12,7 @@ import { useAuth } from "./contexts/AuthContext";
 import "../theme/LoginForm.css";
 
 const LoginForm = () => {
-  const { login } = useAuth();
+  const { login , error} = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -26,6 +26,8 @@ const LoginForm = () => {
       <IonCard class="login-form">
         <form onSubmit={handleLogin}>
           <IonCardHeader>
+            <IonLabel color="danger">{error}</IonLabel>
+
             <IonCardTitle>Fit World</IonCardTitle>
           </IonCardHeader>
           <IonInput

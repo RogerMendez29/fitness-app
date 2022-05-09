@@ -7,7 +7,9 @@
 .edit-profile-btn {
   position: absolute;
   right: 0;
-  top: 62%;
+  bottom: 0;
+  /* top: 62%; */
+  z-index: 1;
 }
 
 
@@ -28,6 +30,7 @@
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   height: calc(100vh);
+  overflow-x: hidden;
 
   margin: 2%;
   width: 50%;
@@ -51,4 +54,7 @@
   right: 0;
   margin-right: 25px;
   z-index: 1;;
+}
+.edit{
+  margin-left: 40%
 }

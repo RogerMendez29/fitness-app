@@ -2,6 +2,8 @@ import "../theme/Profile.css";
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import { useParams, useHistory } from "react-router-dom";
+
 import {
   IonContent,
   IonHeader,
@@ -25,14 +27,13 @@ import {
   IonRow,
 } from "@ionic/react";
 
-function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
+function EditProfileForm({ currentUser, setEditing, setCurrentUser, editing }) {
   const [firstName, setFirstName] = useState(currentUser.profile.first_name);
   const [lastName, setLastName] = useState(currentUser.profile.last_name);
   const [fitness, setFitness] = useState(currentUser.profile.fitness_level);
   const [weight, setWeight] = useState(currentUser.profile.weight);
   const [bodyFat, setBodyFat] = useState(currentUser.profile.bodyfat);
   const [bio, setBio] = useState(currentUser.profile.bio);
-
   const firstDigit = String(currentUser.profile.height)[0];
   const secondDigit = String(currentUser.profile.height)[1];
 
@@ -40,6 +41,11 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
     ft: firstDigit,
     inches: secondDigit,
   });
+  const history = useHistory();
+
+  const navToHome = () => {
+    history.push("/home");
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -58,7 +64,12 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
       }),
     }).then((res) => {
       if (res.ok) {
-        setEditing(false);
+        // setEditing(false)
+        // navToHome()
+        {
+          editing ? setEditing(false) : navToHome();
+        }
+
         res.json().then((data) => {
           setCurrentUser({ ...currentUser, profile: data });
         });
@@ -67,9 +78,10 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="">
+    <form onSubmit={handleSubmit} className="profile-form">
       <IonItem>
         <IonInput
+          required
           value={firstName}
           onIonChange={(e) => setFirstName(e.target.value)}
           placeholder="First name"
@@ -77,6 +89,7 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
       </IonItem>
       <IonItem>
         <IonInput
+          required
           value={lastName}
           onIonChange={(e) => setLastName(e.target.value)}
           placeholder="Last name"
@@ -139,7 +152,9 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser }) {
           placeholder="Bio"
         ></IonTextarea>
       </IonItem>
-      <IonButton type="submit">Submit</IonButton>
+      <IonButton className="edit" type="submit">
+        Submit
+      </IonButton>
     </form>
   );
 }

@@ -19,28 +19,14 @@ import EditExerciseForm from "./EditExerciseForm";
 import ModalBody from "./ModalBody";
 
 function CommentCard({ comment }) {
+ 
 
-    console.log(comment.user_id);
-    
-  
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-      setUser(null)
-    fetch(`api/users/${comment.user_id}`).then((res) =>
-      res.json().then((data) => setUser(data))
-    );
-  }, []);
-
-//   console.log(user);
-  
-
-  function userImage(user) {
-    return user?.profile?.profile_thumbnail ? (
+  function userImage(comment) {
+    return comment.thumbnail_url ? (
       <IonAvatar>
         <img
           className="comment-image"
-          src={user.profile.profile_thumbnail}
+          src={comment.thumbnail_url}
           //   onClick={() => navToUserPage(user.id)}
         />
       </IonAvatar>
@@ -61,9 +47,12 @@ function CommentCard({ comment }) {
 
   return (
     <IonCard>
-      {userImage(user)}
+      <ion-subtitle>{comment.created_date}: </ion-subtitle>
+      <ion-subtitle>{comment.created_time}</ion-subtitle>
+      {userImage(comment)}
+
       <ion-subtitle style={{ fontWeight: "bold" }}>
-        {user?.profile.first_name} {user?.profile.last_name}:{" "}
+        {comment.full_name}:
       </ion-subtitle>
       <ion-text>{comment.comment}</ion-text>
     </IonCard>

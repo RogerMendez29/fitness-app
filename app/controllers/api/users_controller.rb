@@ -24,6 +24,16 @@ class Api::UsersController < ApplicationController
         render json: user, status: :ok
     end
 
+    def suggested
+        users=User.all.order(('created_at DESC'))
+        suggested=users.select { |user| user.profile.fitness_level == "Advanced"}
+        
+
+
+
+        render json:suggested
+    end
+
 
     def create
         user = User.create(user_params)

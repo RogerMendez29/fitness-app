@@ -1,9 +1,9 @@
 .home-content {
   height: 100%;
-  width: 75%;
+  /* width: 75%; */
   border-left: 1px solid rgb(238, 233, 233);
   border-right: 1px solid rgb(238, 233, 233);
-  margin: 5%;
+  /* margin: 5%; */
   margin-top: 1%;
 }
 
@@ -40,7 +40,9 @@
 }
 
 .workout-container {
+  height: calc(100vh);
   margin-top: 30px;
+  overflow-x: hidden;
 }
 .users-container {
   /* width: 40%; */
@@ -88,4 +90,13 @@
     overflow: hidden;
     overflow-y: auto;
   
+}
+
+.row{
+  border-top: 1px  rgb(73, 8, 8)
+}
+
+.search-col{
+  height: calc(100vh);
+  overflow-x: hidden
 }

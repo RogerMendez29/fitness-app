@@ -45,7 +45,11 @@ function CloudinaryUpload({ preset, handleUpload, user }) {
 
   return (
     <div className="btn-container">
-      {user ? null : <IonButton id="upload">Upload</IonButton>}
+      {user ? null : (
+        <IonButton size="small" id="upload" style={{margin:"5%"}}>
+          Upload
+        </IonButton>
+      )}
     </div>
   );
 }

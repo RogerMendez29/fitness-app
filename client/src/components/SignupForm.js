@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../components/contexts/AuthContext";
+import "../theme/Login.css"
 
 import {
   IonInput,
@@ -21,6 +22,7 @@ const SignupForm = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState();
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [errors, setErrors] = useState({});
 
   function navToSetup() {
     history.push("/accout-setup");
@@ -46,13 +48,30 @@ const SignupForm = () => {
         res.json().then((user) => {
           setCurrentUser(user);
         });
+      } else {
+        res.json().then((errors) => {
+          setErrors(errors.error);
+        });
       }
+    });
+  }
+
+  function renderErrors(errors) {
+    let erorrMessage = Object.entries(errors);
+
+    return erorrMessage.map((error) => {
+      return (
+        <ion-text className="errors" color="danger"     >{`${
+          error[0]
+        }: ${error[1].join()}`}</ion-text>
+      );
     });
   }
 
   return (
     <div className="login-card">
       <IonCard class="login-form">
+        {renderErrors(errors)}
         <form onSubmit={handleSubmit}>
           <IonCardHeader>
             <IonCardTitle>Fit World</IonCardTitle>
@@ -71,7 +90,6 @@ const SignupForm = () => {
             placeholder="Phone"
             onIonChange={(e) => setPhone(e.target.value)}
             value={phone}
-            required
           ></IonInput>
           <IonInput
             class="login-input"

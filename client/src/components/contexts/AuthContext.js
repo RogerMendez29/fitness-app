@@ -9,13 +9,14 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
+  const [followeeIds, setFolloweeIds] = useState([]);
   const [workouts, setWorkouts] = useState([]);
   const [exercises, setExercises] = useState([]);
   const [users, setUsers] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [followees, setFollowees] = useState([]);
-  const [userPosts, setUserPosts] = useState([]);
   const [workoutExercises, setWorkoutExercises] = useState([]);
+  const [error, setError] = useState("");
 
   function login(email, password) {
     fetch("/api/login", {
@@ -28,6 +29,11 @@ export function AuthProvider({ children }) {
       if (res.ok) {
         res.json().then((user) => {
           setCurrentUser(user);
+          setError("");
+        });
+      } else {
+        res.json().then((error) => {
+          setError(Object.values(error));
         });
       }
     });
@@ -40,15 +46,12 @@ export function AuthProvider({ children }) {
     }).then((res) => {
       if (res.ok) {
         setCurrentUser(null);
+
         // const event = new CustomEvent("authStateChange");
         // document.dispatchEvent(event);
       }
     });
   }
-
-  // let FolloweesIds= followees.map(followee=> followee.id)
-
-  
 
   useEffect(() => {
     fetch("/api/users")
@@ -78,6 +81,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = {
+    error,
+    followeeIds,
     workoutExercises,
     followees,
     followers,
@@ -92,6 +97,7 @@ export function AuthProvider({ children }) {
     setCurrentUser,
     login,
     handleLogout,
+    setFolloweeIds,
     workouts,
   };
 

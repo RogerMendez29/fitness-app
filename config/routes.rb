@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   resources :exercises
   resources :profiles
   resources :users
+  get "/suggested_users/", to: "users#suggested"
+
 
   get "/user_page/:id", to: "users#find"
 

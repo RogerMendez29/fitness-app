@@ -1,7 +1,7 @@
 class Api::WorkoutsController < ApplicationController
 
     def index
-        workout = Workout.all.order(:id)
+        workout = Workout.all.order('created_at DESC')
         render json:workout
     end
 
