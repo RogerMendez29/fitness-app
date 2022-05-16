@@ -1,26 +1,58 @@
 .login-card {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .login-form {
-    width: 75%;
-    max-width: 540px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
-  }
-  
-  .login-input {
-    width: 75%;
-    background-color: rgba(233, 230, 230, 0.5);
-    padding: 0.75rem;
-  }
-  
-  .login-btn {
-    width: 50%;
-  }
+  height: 100%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+.form{
+  text-align: center;
+}
+
+.login-form {
+  background-color: rgb(70, 65, 65);
+  width: 75%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 1.75rem; */
+  padding: 1rem;
+}
+
+.title{
+  width: 2px;
+}
+
+.login-input {
+  width: 100%;
+  background-color: rgba(15, 15, 15, 0.5);
+  /* background-color: rgba(233, 230, 230, 0.5); */
+  padding: 0.75rem;
+  margin: 1.5rem;
+  margin-left: 0;
+
+  text-align: left;
+}
+
+.user-flow-ntfy {
+  /* width: 75%; */
+  /* margin-left: 10%; */
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.login-btn {
+  width: 50%;
+}
+
+
+.signup-item{
+  background-color:black;
+}
+
+.link{
+  margin-top: 10px;
+  border-radius: 10px;
+  background-color: rgb(189, 196, 189)!important;
+}

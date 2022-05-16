@@ -1,7 +1,9 @@
 import React, { useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../components/contexts/AuthContext";
-import "../theme/Login.css"
+import "../theme/Login.css";
+import { Redirect } from "react-router-dom";
+import { warning } from "ionicons/icons";
 
 import {
   IonInput,
@@ -11,6 +13,7 @@ import {
   IonButton,
   IonItem,
   IonLabel,
+  IonIcon,
 } from "@ionic/react";
 import "../theme/LoginForm.css";
 
@@ -19,15 +22,14 @@ const SignupForm = () => {
 
   const { setCurrentUser } = useAuth();
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState();
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [errors, setErrors] = useState({});
 
-  function navToSetup() {
-    history.push("/accout-setup");
-  }
-
+  
   function handleSubmit(event) {
     event.preventDefault();
     fetch("/api/signup", {
@@ -37,16 +39,22 @@ const SignupForm = () => {
       },
       body: JSON.stringify({
         email,
+        username: username,
         password,
         phone,
         password_confirmation: passwordConfirmation,
       }),
     }).then((res) => {
       if (res.ok) {
-        navToSetup();
-
         res.json().then((user) => {
+          history.push({
+            pathname: "/account-setup",
+            state: { fromSignup: true },
+          });
           setCurrentUser(user);
+          console.log(history);
+
+          // <Redirect to="/account-setup" />;
         });
       } else {
         res.json().then((errors) => {
@@ -61,9 +69,26 @@ const SignupForm = () => {
 
     return erorrMessage.map((error) => {
       return (
-        <ion-text className="errors" color="danger"     >{`${
-          error[0]
-        }: ${error[1].join()}`}</ion-text>
+        <IonItem
+          style={{
+            margin: ".3rem",
+          }}
+          className="user-flow-ntfy"
+          color="danger"
+          shape="round"
+        >
+          <p
+            style={{
+              fontWeight: "bold",
+            }}
+            slot="start"
+          >
+            {error[0]} {error[1]}
+          </p>
+          {<IonIcon className="icon" icon={warning}></IonIcon>}
+        </IonItem>
+
+        
       );
     });
   }
@@ -72,9 +97,17 @@ const SignupForm = () => {
     <div className="login-card">
       <IonCard class="login-form">
         {renderErrors(errors)}
-        <form onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit}>
           <IonCardHeader>
-            <IonCardTitle>Fit World</IonCardTitle>
+            <IonCardTitle
+              color="light"
+              style={{
+                fontWeight: "bold",
+                fontSize: "25px",
+              }}
+            >
+              Sign up
+            </IonCardTitle>
           </IonCardHeader>
           <IonInput
             class="login-input"
@@ -87,7 +120,15 @@ const SignupForm = () => {
           <IonInput
             class="login-input"
             type="text"
-            placeholder="Phone"
+            placeholder="Username"
+            onIonChange={(e) => setUsername(e.target.value)}
+            value={username}
+            required
+          ></IonInput>
+          <IonInput
+            class="login-input"
+            type="text"
+            placeholder="Optional: Phone"
             onIonChange={(e) => setPhone(e.target.value)}
             value={phone}
           ></IonInput>
@@ -108,14 +149,14 @@ const SignupForm = () => {
             required
           ></IonInput>
           <IonButton
-            expand="block"
+            expand=""
             class="login-btn"
             type="submit"
             // href="account-setup"
           >
             Sign up
           </IonButton>
-          <IonItem href="login" className="ion-activated">
+          <IonItem href="login" className="link">
             <IonLabel>Already have an account? Login</IonLabel>
           </IonItem>
         </form>

@@ -14,6 +14,7 @@ import {
 import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
 import { useAuth } from "./contexts/AuthContext";
+import "../theme/PostWorkout.css";
 
 const PostWorkoutForm = () => {
   const {
@@ -42,45 +43,24 @@ const PostWorkoutForm = () => {
     setCreating(!creating);
   }
 
-  function renderPostBtn() {
-    if (!creatingExercise && !creating) {
-      return (
-        <IonButton
-          onClick={() => {
-            setCreating(!creating);
-          }}
-          className="toggle-form"
-        >
-          Post a Workout
-        </IonButton>
-      );
-    } else {
-      return (
-        <IonButton
-          color="success"
-          onClick={() => {
-            setCreating(false);
-            setCreatingExercise(false);
-          }}
-          className="toggle-form"
-        >
-          Done
-        </IonButton>
-      );
-    }
-  }
-
   function addExercise() {
     createExerciseObj();
   }
 
+  // console.log(exercises[0].enteredWord);
+
+  // let first = exercises[0]
+
+  
+
   function createExerciseObj() {
-    let obj = { id: exerciseId };
+    let obj = { id: exerciseId, enteredWord: wordEntered };
+
+
     let exerciseInfo = exercisesContainer.querySelectorAll("ion-item");
     exerciseInfo.forEach((e) => {
       let label = e.querySelector("ion-label")?.innerHTML;
       obj[label] = e.querySelector("ion-input")?.value;
-      // let id = exerciseId;
     });
     setExercises([...exercises, obj]);
   }
@@ -100,11 +80,16 @@ const PostWorkoutForm = () => {
       if (res.ok) {
         setCreatingExercise(!creatingExercise);
         setCreating(!creating);
+        setWorkoutName("");
+        setDifficulty("");
+        setDescription("");
 
         res.json().then((data) => {
           setWorkoutId(data.id);
           setWorkouts([...workouts, data]);
           exercises.map((exercise) => {
+            console.log(exercise);
+
             fetch("/api/workout_exercises", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -115,7 +100,7 @@ const PostWorkoutForm = () => {
                 reps: exercise.Reps,
                 weight: exercise.Weight,
                 time: exercise.Time,
-                distance: exercise.distance,
+                distance: exercise.Distance,
                 rest: exercise.Rest,
               }),
             }).then((res) => {
@@ -125,7 +110,6 @@ const PostWorkoutForm = () => {
                 setCreatingExercise(false);
                 res.json().then((data) => {
                   setWorkoutExercises([...workoutExercises, data]);
-                  console.log(data);
 
                   fetch("/api/workouts")
                     .then((res) => res.json())
@@ -152,29 +136,28 @@ const PostWorkoutForm = () => {
 
   return (
     <div className="post-container">
-      <IonTitle>Home</IonTitle>
-      {renderPostBtn()}
-
-      {creating ? (
+      {!creatingExercise ? (
         <form onSubmit={postWorkout} className="workout-form">
           <IonItem>
             <IonInput
               value={workoutName}
               onIonChange={(e) => setWorkoutName(e.target.value)}
-              placeholder="Workout name"
+              placeholder="Create A Workout"
+              required
             ></IonInput>
             <IonSelect
               value={difficulty}
               onIonChange={(e) => setDifficulty(e.target.value)}
               okText="Okay"
               cancelText="Dismiss"
-              placeholder="difficulty"
+              placeholder="Difficulty"
+              required
             >
+              <IonSelectOption value="Easy">Easy</IonSelectOption>
               <IonSelectOption value="Intermediate">
                 Intermediate
               </IonSelectOption>
-              <IonSelectOption value="easy">easy</IonSelectOption>
-              <IonSelectOption value="hard">hard</IonSelectOption>
+              <IonSelectOption value="Hard">Hard</IonSelectOption>
             </IonSelect>
           </IonItem>
           <IonItem>
@@ -185,12 +168,19 @@ const PostWorkoutForm = () => {
               placeholder="Description:"
             ></IonTextarea>
           </IonItem>
-          <IonButton type="submit">add Exercises</IonButton>
+          <IonButton
+            color="dark"
+            size="small"
+            style={{ textTransform: "none" }}
+            type="submit"
+          >
+            Add Exercises
+          </IonButton>
         </form>
       ) : null}
 
       {creatingExercise ? (
-        <div id="exercises" ref={(el) => (exercisesContainer = el)}>
+        <div id="exercises">
           <form className="workout-form" onSubmit={post}>
             <SearchBar
               exerciseId={exerciseId}
@@ -198,31 +188,32 @@ const PostWorkoutForm = () => {
               wordEntered={wordEntered}
               setWordEntered={setWordEntered}
             />
-
-            <ion-item>
-              <ion-label>Sets</ion-label>
-              <ion-input placeholder="" type="number"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Reps</ion-label>
-              <ion-input placeholder="" type="number"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Weight</ion-label>
-              <ion-input placeholder="" type="number"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Time</ion-label>
-              <ion-input placeholder="" type="number"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>distance</ion-label>
-              <ion-input placeholder="" type="number"></ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-label>Rest</ion-label>
-              <ion-input placeholder="" type="number"></ion-input>
-            </ion-item>
+            <div ref={(el) => (exercisesContainer = el)}>
+              <ion-item>
+                <ion-label>Sets</ion-label>
+                <ion-input placeholder="" type="number"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Reps</ion-label>
+                <ion-input placeholder="" type="number"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Weight</ion-label>
+                <ion-input placeholder="" type="number"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Time</ion-label>
+                <ion-input placeholder="" type="number"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Distance</ion-label>
+                <ion-input placeholder="" type="number"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-label>Rest</ion-label>
+                <ion-input placeholder="" type="number"></ion-input>
+              </ion-item>
+            </div>
 
             <IonButton
               color="success"
@@ -236,11 +227,19 @@ const PostWorkoutForm = () => {
 
             <IonButton type="submit">Post</IonButton>
           </form>
-          <IonTitle>Exercises Added:</IonTitle>
+          <IonTitle
+            style={{
+              marginBottom: "1rem",
+              fontWeight: "bold",
+              fontSize: "20px",
+            }}
+          >
+            Exercises Added:
+          </IonTitle>
           {exercises.map((exercise) => (
-            <ion-item key={Object.keys(exercise)[1]}>
-              <ion-label key={exercise.id}>
-                {Object.keys(exercise)[1]}
+            <ion-item key={exercise.id}>
+              <ion-label key={exercise.id + 1}>
+                : {exercise.enteredWord}
               </ion-label>
             </ion-item>
           ))}

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { Link, Redirect, useHistory, useLocation } from "react-router-dom";
 
 const AuthContext = React.createContext();
 
@@ -29,6 +30,8 @@ export function AuthProvider({ children }) {
       if (res.ok) {
         res.json().then((user) => {
           setCurrentUser(user);
+          setFollowees(user.followees);
+          setFolloweeIds(followees.map((followee) => followee.id));
           setError("");
         });
       } else {
@@ -46,9 +49,6 @@ export function AuthProvider({ children }) {
     }).then((res) => {
       if (res.ok) {
         setCurrentUser(null);
-
-        // const event = new CustomEvent("authStateChange");
-        // document.dispatchEvent(event);
       }
     });
   }
@@ -98,6 +98,7 @@ export function AuthProvider({ children }) {
     login,
     handleLogout,
     setFolloweeIds,
+    setExercises,
     workouts,
   };
 

@@ -7,73 +7,70 @@ import {
   IonTitle,
   IonSearchbar,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
 import { IonPage } from "@ionic/react";
 import PostWorkoutForm from "../components/PostWorkoutForm";
 import RenderUsers from "../components/RenderUsers";
 import { useAuth } from "../components/contexts/AuthContext";
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import RenderWorkouts from "../components/RenderWorkouts";
 
-const Home = ({
-  setUser,
-  canModify,
-  handleFollow,
-  // followeeIds,
-  // setFolloweeIds,
-}) => {
-  const { workouts, users, currentUser, followeeIds, setFolloweeIds } =
+const Home = ({ setUser, canModify, handleFollow }) => {
+  const { workouts, currentUser, followeeIds, setFolloweeIds, users } =
     useAuth();
-  const [search, setSearch] = useState("");
   const [suggested, setSuggested] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+
+  let searchBar;
 
   useEffect(() => {
     fetch(`api/suggested_users`)
       .then((response) => response.json())
-      .then((data) => setSuggested(data.slice(0, 6)));
+      .then((data) => setSuggested(data.slice(0, 12)));
   }, []);
 
-  console.log(suggested);
-
-  let searchResults = [];
-
-  searchResults = users.filter((user) => {
-    if (user.profile.first_name && user.profile.last_name) {
-      return (
-        user.profile?.first_name.toLowerCase().includes(search.toLowerCase()) ||
-        user.profile?.last_name.toLowerCase().includes(search.toLowerCase())
-      );
-    } else {
-      return null;
-    }
-  });
-
   const createFeed = () => {
-    followeeIds.push(currentUser.id);
-    const feed = workouts.filter((workout) =>
-      followeeIds.includes(workout.user_id)
+    const feed = workouts.filter(
+      (workout) =>
+        followeeIds.includes(workout.user_id) ||
+        workout.user_id === currentUser.id
     );
 
     return feed;
   };
 
-  const feed = workouts.filter((workout) =>
-    followeeIds.includes(workout.user_id)
-  );
-
   function handleSearch(event) {
-    setSearch(event.detail.value);
+    const value = event.detail.value;
+    searchBar.value = value;
+    getSearchResults(value);
+  }
+
+  function getSearchResults(value) {
+    const filteredUsers = users?.filter((user) => {
+      return (
+        user?.username.toLowerCase().includes(value.toLowerCase()) ||
+        user.profile?.first_name?.toLowerCase().includes(value.toLowerCase()) ||
+        user.profile?.last_name?.toLowerCase().includes(value.toLowerCase())
+      );
+    });
+    setSearchResults(value ? filteredUsers : []);
   }
 
   return (
     <IonPage>
-      <IonContent class="">
+      <IonContent class="main-content">
         <IonGrid class="">
-          <IonRow className="row">
-            <IonCol className="">
-              {/* <div className="suggested-users-cont"> */}
-              <IonTitle>People You Might Like</IonTitle>
-              {/* <div className="users-container"> */}
+          <IonRow className="" style={{ marginRight: "0" }}>
+            <IonCol size="" className="">
+              <IonTitle
+                style={{
+                  marginBottom: "3.25rem",
+                  fontWeight: "bold",
+                  fontSize: "23px",
+                }}
+              >
+                Who To Follow
+              </IonTitle>
               <RenderUsers
                 setFolloweeIds={setFolloweeIds}
                 followeeIds={followeeIds}
@@ -81,35 +78,45 @@ const Home = ({
                 users={suggested}
                 handleFollow={handleFollow}
               />
-              {/* </div> */}
-              {/* </div> */}
             </IonCol>
-            <IonCol size="7" className="right-col">
+            <IonCol size="7" className="suggested-col">
+              <IonTitle
+                style={{
+                  marginBottom: "3.25rem",
+                  fontWeight: "bold",
+                  fontSize: "25px",
+                }}
+              >
+                Home Feed
+              </IonTitle>
+
               <div className="home-content">
                 <PostWorkoutForm />
 
                 <div className="workout-container">
-                  <RenderWorkouts canModify={canModify} posts={createFeed()} />
+                  <RenderWorkouts
+                    canModify={canModify}
+                    setUser={setUser}
+                    posts={createFeed()}
+                  />
                 </div>
               </div>
             </IonCol>
-            <IonCol className="search-col">
+            <IonCol size="" className="">
               <IonSearchbar
-                value={search}
+                style={{ marginBottom: "1.5rem" }}
+                ref={(el) => (searchBar = el)}
                 className="search-bar"
-                placeholder="Search  by Name"
+                placeholder="Search by Name"
                 onIonChange={handleSearch}
               ></IonSearchbar>
-              {search.length > 0 ? (
-                <RenderUsers
-                  // followIdees={followIdees}
-                  setFolloweeIds={setFolloweeIds}
-                  followeeIds={followeeIds}
-                  setUser={setUser}
-                  users={searchResults}
-                  handleFollow={handleFollow}
-                />
-              ) : null}
+              <RenderUsers
+                setFolloweeIds={setFolloweeIds}
+                followeeIds={followeeIds}
+                setUser={setUser}
+                users={searchResults}
+                handleFollow={handleFollow}
+              />
             </IonCol>
           </IonRow>
         </IonGrid>

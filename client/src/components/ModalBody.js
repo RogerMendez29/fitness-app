@@ -15,7 +15,7 @@ import {
   IonCol,
 } from "@ionic/react";
 import { useAuth } from "./contexts/AuthContext";
-// import "../theme/LoginForm.css";
+import "../theme/ModalBody.css";
 
 function ModalBody({ setOpen, id }) {
   const [exercise, setExercise] = useState();
@@ -30,32 +30,46 @@ function ModalBody({ setOpen, id }) {
 
   return (
     <IonContent>
-      <IonHeader>
+      <IonHeader className="header">
         <IonToolbar>
           <IonTitle>{exercise ? exercise?.name : null}</IonTitle>
+          <IonButton color="dark" slot="end" onClick={() => setOpen(false)}>
+            Close
+          </IonButton>
         </IonToolbar>
       </IonHeader>
       <IonGrid>
         <IonRow>
-          <IonCol>
-            <img
-              src={exercise ? exercise?.gif_url : null}
-              // rel:animated_src="./example1.gif"
-              width="360"
-              height="360"
-              // rel:auto_play="1"
-              // rel:rubbable="1"
-            />
+          <IonCol className="modal-col">
+            <IonCard>
+              <IonTitle className="modal-title" style={{ margin: "15px" }}>
+                Target: {exercise?.target}
+              </IonTitle>
+              <IonTitle className="modal-title" style={{ margin: "15px" }}>
+                Body Part: {exercise?.bodypart}
+              </IonTitle>
+              <IonTitle className="modal-title" style={{ margin: "15px" }}>
+                Equipment Needed: {exercise?.equipment}
+              </IonTitle>
+            </IonCard>
           </IonCol>
-          <IonCol>
-            <IonTitle style={{margin: "15px"}}>Target: {exercise?.target}</IonTitle>
-            <IonTitle style={{margin: "15px"}}>Body Part: {exercise?.bodypart}</IonTitle>
-            <IonTitle style={{margin: "15px"}}>Equipment Needed: {exercise?.equipment}</IonTitle>
+        </IonRow>
+        <IonRow>
+          <IonCol style={{ marginBottom: "5rem" }}>
+            <div className="gif-container">
+              <img
+                className="gif"
+                src={exercise ? exercise?.gif_url : null}
+                // rel:animated_src="./example1.gif"
+                width="360"
+                height="360"
+                // rel:auto_play="1"
+                // rel:rubbable="1"
+              />
+            </div>
           </IonCol>
         </IonRow>
       </IonGrid>
-
-      <IonButton onClick={() => setOpen(false)}>Close</IonButton>
     </IonContent>
   );
 }

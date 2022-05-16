@@ -1,6 +1,32 @@
-.icon-tab{
-    height:32px;
-    width:32px;
-    font-size:32px;
-    font: weight 400px;
+.icon-tab {
+  height: 32px;
+  width: 32px;
+  font-size: 32px;
+  font: weight 400px;
+}
+.tab-bar {
+  box-shadow: rgba(197, 193, 193, 0.35) 15px 15px 15px;
+}
+
+.tab-bar-btn {
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(197, 193, 193, 0.35) 0px 15px 15px;
+}
+
+
+.tab-bar-btn:hover {
+  background-color: rgb(246, 241, 241);
+}
+
+
+
+.logout-div{
+  display: inline-block;
+  height: 100%;
+}
+
+.logout-tab{
+  --padding-start: 0px;
+  --padding-end: 0px;
+  margin-bottom: 0px;
 }

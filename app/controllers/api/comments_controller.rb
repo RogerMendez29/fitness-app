@@ -13,8 +13,13 @@ end
         else
             render json: {error: comment.errors}, status: :unprocessable_entity
         end
-        
     end
+
+    def destroy
+        comment = Comment.find(params[:id])
+        comment.destroy
+    end
+
 
     private
 

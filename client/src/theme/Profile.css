@@ -2,27 +2,24 @@
   padding-inline: 15px;
   width: 100%;
   height: 100%;
+  /* margin: 2rem; */
+  margin-right: 0rem;
+  margin-top: 1rem;
+  border-radius:15%
 }
 
 .edit-profile-btn {
   position: absolute;
   right: 0;
   bottom: 0;
-  /* top: 62%; */
   z-index: 1;
 }
-
-
-
-
-
 
 .profile-container {
   height: 100%;
 }
 
 .profile-card {
-  margin: 5%;
   margin-top: 1%;
 }
 
@@ -31,30 +28,59 @@
   margin-bottom: 0 !important;
   height: calc(100vh);
   overflow-x: hidden;
-
-  margin: 2%;
   width: 50%;
   border-right: 1px solid rgb(238, 233, 233);
   border-left: 1px solid rgb(238, 233, 233);
 }
 
 .grid {
-  height: 50% !important;
   height: calc(100vh);
 }
 
-.image-container {
+/* .image-container {
   width: 100%;
   height: 300px;
-}
+} */
 
-
-.user-page-follow{
+.user-page-follow {
   position: absolute;
   right: 0;
   margin-right: 25px;
-  z-index: 1;;
+  z-index: 1;
 }
-.edit{
-  margin-left: 40%
+.edit {
+  margin-left: 0%;
+}
+
+.following-container {
+  overflow-x: hidden;
+  overflow-x: hidden;
+  /* width: 50%; */
+}
+
+.title-header {
+  align-items: center;
+  text-align: center;
+  display: inline;
+  width: 100%;
+  height: 20%;
+  margin-top: 2rem;
+}
+.title {
+  cursor: pointer;
+  margin-bottom: 3.25rem;
+  font-weight: bold;
+  font-size: 25px;
+  width: 100%;
+  color:#033350
+}
+.title:hover {
+  border-radius: 15px;
+  background-color: rgb(235, 232, 232);
+  text-decoration: underline;
+}
+
+.col {
+  display: inline-block;
+  width: 50%;
 }

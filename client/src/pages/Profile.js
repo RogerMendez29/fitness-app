@@ -4,30 +4,23 @@ import { useEffect, useState } from "react";
 
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonToolbar,
-  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonButton,
   IonTitle,
   IonCard,
-  IonItem,
-  IonInput,
-  IonTextarea,
-  IonLabel,
-  IonSelect,
-  IonSelectOption,
   IonGrid,
   IonCol,
   IonRow,
+  IonHeader,
 } from "@ionic/react";
 import { useAuth } from "../components/contexts/AuthContext";
 import CloudinaryUpload from "../components/CloudinaryUpload";
 import RenderWorkouts from "../components/RenderWorkouts";
 import EditProfileForm from "../components/EditProfileForm";
+import RenderUsers from "../components/RenderUsers";
 
 const Profile = ({
   user,
@@ -35,6 +28,9 @@ const Profile = ({
   handleFollow,
   followeeIds,
   setFolloweeIds,
+  setUser,
+  canModify,
+  users,
 }) => {
   const { workouts, setCurrentUser } = useAuth();
 
@@ -42,6 +38,7 @@ const Profile = ({
   const [posts, setPosts] = useState([]);
   const [followers, setFollowers] = useState(0);
   const [followees, setFollowees] = useState(0);
+  const [toggleFollowers, setToggleFollowers] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -52,7 +49,34 @@ const Profile = ({
       setFollowees(currentUser?.followees.length);
     }
   }, []);
-  console.log();
+
+
+  function toggleUsers() {
+    const userPageFolloweeIds = user?.followees.map((user) => user.id);
+    const followees = () => {
+      if (userPageFolloweeIds) {
+        return users.filter((user) => userPageFolloweeIds.includes(user.id));
+      } else {
+        return users.filter((user) => followeeIds.includes(user.id));
+      }
+    };
+
+    const followers = () => {
+      if (userPageFolloweeIds) {
+        const followerIds = user?.followers.map((user) => user.id);
+        return users.filter((user) => followerIds.includes(user.id));
+      } else {
+        const followerIds = currentUser?.followers.map((user) => user.id);
+        return users.filter((user) => followerIds.includes(user.id));
+      }
+    };
+
+    if (toggleFollowers) {
+      return followers();
+    } else {
+      return followees();
+    }
+  }
 
   function dateJoined() {
     if (user) {
@@ -137,14 +161,19 @@ const Profile = ({
       <IonContent class="">
         <IonGrid className="">
           <IonRow className="">
-            {/* <div className=""> */}
-            <IonCol size="3.5" className="">
-              <IonTitle>Profile</IonTitle>
+            <IonCol style={{ marginTop: "1rem" }} size="" className="">
+              <IonTitle
+                style={{
+                  marginBottom: "3.25rem",
+                  fontWeight: "bold",
+                  fontSize: "25px",
+                }}
+              >
+                Profile
+              </IonTitle>
 
               <IonCard className="profile-card">
-                {/* <div className="image-container"> */}
                 <img className="profile-image" src={imageLink()} />
-                {/* </div> */}
                 <CloudinaryUpload
                   user={user}
                   preset="nn7aqzhz"
@@ -162,7 +191,7 @@ const Profile = ({
                 ) : (
                   <div>
                     <IonButton
-                    style={{margin:"5%"}}
+                      style={{ margin: "5%" }}
                       size="small"
                       onClick={() => setEditing(!editing)}
                       className="edit-profile-btn"
@@ -193,24 +222,78 @@ const Profile = ({
               </IonCard>
 
               {editing ? (
-                <EditProfileForm
-                  editing={editing}
-                  currentUser={currentUser}
-                  setEditing={setEditing}
-                  setCurrentUser={setCurrentUser}
-                />
+                <IonCard style={{ marginTop: "1rem" }}>
+                  <EditProfileForm
+                    editing={editing}
+                    currentUser={currentUser}
+                    setEditing={setEditing}
+                    setCurrentUser={setCurrentUser}
+                  />
+                </IonCard>
               ) : (
                 <IonCardHeader></IonCardHeader>
               )}
             </IonCol>
-            {/* </div> */}
-            <div className="user-workouts-container">
-              <IonCol size="5" className="">
-                <IonTitle>{profileTitle()}</IonTitle>
+            <div
+              className="user-workouts-container"
+              style={{ marginRight: "1rem", marginLeft: "1rem" }}
+            >
+              <IonCol
+                style={{ marginLeft: "2rem", marginRight: "2rem" }}
+                size="8"
+                className=""
+              >
+                <IonTitle
+                  style={{
+                    marginBottom: "3.25rem",
+                    fontWeight: "bold",
+                    fontSize: "25px",
+                  }}
+                >
+                  {profileTitle()}
+                </IonTitle>
 
                 <RenderWorkouts setPosts={setPosts} posts={sortUsers()} />
               </IonCol>
             </div>
+            <IonCol style={{ marginTop: "1rem" }}>
+              <div className="title-header">
+                <div className="col">
+                  <IonTitle
+                    style={{
+                      textDecoration: toggleFollowers ? "underline" : "none",
+                    }}
+                    className="title"
+                    onClick={() => setToggleFollowers(true)}
+                  >
+                    Followers
+                  </IonTitle>
+                </div>
+                <div className="col">
+                  <IonTitle
+                    style={{
+                      textDecoration:
+                        toggleFollowers === false ? "underline" : "none",
+                    }}
+                    className="title"
+                    onClick={() => setToggleFollowers(false)}
+                  >
+                    Following
+                  </IonTitle>
+                </div>
+              </div>
+
+              <div className="following-container"></div>
+              <div className="title-header" style={{ display: "inline" }}></div>
+
+              <RenderUsers
+                setFolloweeIds={setFolloweeIds}
+                followeeIds={followeeIds}
+                setUser={setUser}
+                users={toggleUsers()}
+                handleFollow={handleFollow}
+              />
+            </IonCol>
           </IonRow>
         </IonGrid>
       </IonContent>

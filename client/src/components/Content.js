@@ -1,5 +1,5 @@
 import { Route, NavLink, Switch } from "react-router-dom";
-import { ellipse, square, triangle, logout } from "ionicons/icons";
+import { home, calendar, create } from "ionicons/icons";
 import { IonReactRouter } from "@ionic/react-router";
 import { useState, useEffect } from "react";
 import {
@@ -10,6 +10,7 @@ import {
   IonLabel,
   IonTabButton,
   IonAvatar,
+  IonModal,
 } from "@ionic/react";
 import Home from "../pages/Home";
 import Setup from "../pages/Setup";
@@ -18,15 +19,33 @@ import Profile from "../pages/Profile";
 import UserPage from "../pages/UserPage";
 import "../theme/Content.css";
 import { useAuth } from "../components/contexts/AuthContext";
+import PostExerciseModal from "./PostExerciseModal";
 
 const Content = () => {
-  const { handleLogout, currentUser, followees,followeeIds,setFolloweeIds } = useAuth();
+  const {
+    handleLogout,
+    currentUser,
+    followees,
+    followeeIds,
+    setFolloweeIds,
+    users,
+  } = useAuth();
   const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const [canModify, setCanModify] = useState(currentUser.user_can_modify);
 
   useEffect(() => {
     setFolloweeIds(followees.map((followee) => followee.id));
-  }, []);
+  }, [followees]);
+
+
+
+
+
+  const closeModal = () => {
+    setOpen(false);
+  };
 
   function profileImage() {
     return currentUser.profile?.profile_thumbnail ? (
@@ -72,8 +91,21 @@ const Content = () => {
     }
   }
 
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+
   return (
     <div>
+      <IonModal
+        isOpen={open}
+        onDismiss={closeModal}
+        breakpoints={[0, 0.2, 0.5]}
+        initialBreakpoint={0.5}
+        backdropBreakpoint={0.2}
+      >
+        <PostExerciseModal setOpen={setOpen} />
+      </IonModal>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
@@ -81,24 +113,34 @@ const Content = () => {
               <Calender />
             </Route>
             <Route exact path="/profile">
-              <Profile currentUser={currentUser} followeeIds={followeeIds} />
-            </Route>
-            <Route exact path="/user_page/:id">
-              <UserPage
-                user={user}
-                setUser={setUser}
-                setFolloweeIds={setFolloweeIds}
+              <Profile
+                currentUser={currentUser}
                 followeeIds={followeeIds}
+                users={users}
+                setFolloweeIds={setFolloweeIds}
+                setUser={setUser}
                 canModify={canModify}
                 handleFollow={handleFollow}
               />
             </Route>
+            <Route exact path="/user_page/:id">
+              <UserPage
+                currentUser={currentUser}
+                followeeIds={followeeIds}
+                users={users}
+                setFolloweeIds={setFolloweeIds}
+                setUser={setUser}
+                canModify={canModify}
+                handleFollow={handleFollow}
+                user={user}
+              />
+            </Route>
             <Route exact path="/account-setup">
               <Setup />
-              <div>setup</div>
             </Route>
             <Route path="/home">
               <Home
+                users={users}
                 setFolloweeIds={setFolloweeIds}
                 followeeIds={followeeIds}
                 setUser={setUser}
@@ -107,31 +149,45 @@ const Content = () => {
               />
             </Route>
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href="/home">
-              <IonIcon size="large" icon={triangle} />
+          <IonTabBar className="tab-bar" slot="top">
+            {currentUser.user_can_modify ? (
+              <IonTabButton className="tab-bar-btn" tab="Post">
+                <IonIcon onClick={handleOpen} icon={create}></IonIcon>
+                <IonLabel onClick={handleOpen}>Post Exercise</IonLabel>
+              </IonTabButton>
+            ) : null}
+
+            <IonTabButton className="tab-bar-btn" tab="home" href="/home">
+              <IonIcon size="large" icon={home} />
               <IonLabel>Home</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="calender" href="/calender">
-              <IonIcon size="large" icon={ellipse} />
+            <IonTabButton
+              className="tab-bar-btn"
+              tab="calender"
+              href="/calender"
+            >
+              <IonIcon size="large" icon={calendar} />
               <IonLabel>Calender</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="profile" href="/profile">
+            <IonTabButton className="tab-bar-btn" href="/profile" tab="profile">
               {profileImage()}
               <IonLabel>Profile</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="logout" href="/login">
-              <svg
-                onClick={handleLogout}
-                xmlns="http://www.w3.org/2000/svg"
-                className="icon-tab"
-                viewBox="0 0 512 512"
-              >
-                <title>Log Out</title>
-                <path d="M160 256a16 16 0 0116-16h144V136c0-32-33.79-56-64-56H104a56.06 56.06 0 00-56 56v240a56.06 56.06 0 0056 56h160a56.06 56.06 0 0056-56V272H176a16 16 0 01-16-16zM459.31 244.69l-80-80a16 16 0 00-22.62 22.62L409.37 240H320v32h89.37l-52.68 52.69a16 16 0 1022.62 22.62l80-80a16 16 0 000-22.62z" />
-              </svg>
 
-              <IonLabel>Logout</IonLabel>
+            <IonTabButton className="tab-bar-btn logout-tab" tab="logout">
+              <div style={{ width: "100%" }} onClick={handleLogout}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="icon-tab"
+                  viewBox="0 0 512 512"
+                >
+                  <title>Log Out</title>
+                  <path d="M160 256a16 16 0 0116-16h144V136c0-32-33.79-56-64-56H104a56.06 56.06 0 00-56 56v240a56.06 56.06 0 0056 56h160a56.06 56.06 0 0056-56V272H176a16 16 0 01-16-16zM459.31 244.69l-80-80a16 16 0 00-22.62 22.62L409.37 240H320v32h89.37l-52.68 52.69a16 16 0 1022.62 22.62l80-80a16 16 0 000-22.62z" />
+                </svg>
+              </div>
+              <div style={{ width: "100%" }} onClick={handleLogout}>
+                <IonLabel>Logout</IonLabel>
+              </div>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

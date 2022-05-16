@@ -1,25 +1,12 @@
-import { IonLabel, IonList, IonItem } from "@ionic/react";
+import { IonLabel, IonList, IonItem, IonCard } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "./contexts/AuthContext";
 import { IonButton, IonAvatar } from "@ionic/react";
-import "../theme/Utils.css";
+import "../theme/UserCard.css";
 
-function RenderUsers({
-  followIdees,
-  users,
-  setUser,
-  handleFollow,
-  followeeIds,
-  setFolloweeIds,
-}) {
+function RenderUsers({ users, setUser, handleFollow, followeeIds }) {
   const { currentUser, followees } = useAuth();
-
-  // useEffect(() => {
-  //   followees.forEach((followee) =>
-  //     setFolloweeIds([...followeeIds, followee.id])
-  //   );
-  // }, []);
 
   let history = useHistory();
 
@@ -33,6 +20,8 @@ function RenderUsers({
         setUser(data);
       });
   }
+
+  console.log(followeeIds);
 
   function userImage(user) {
     return user.profile?.profile_thumbnail ? (
@@ -58,27 +47,27 @@ function RenderUsers({
   }
 
   const userCards = users?.map((user) => {
-    if (
-      user.profile.first_name &&
-      user.id !== currentUser.id &&
-      !followeeIds.includes(user.id)
-    ) {
+    if (user.profile.first_name && user.id !== currentUser.id) {
       return (
-        <ion-card key={user.id} color="medium" className="user-card">
-          <ion-card-header>
+        <IonCard key={user.id} class="user-card">
+          <div className="user-card-content">
             {userImage(user)}
-            <ion-card-subtitle>
+            <div>
               {user.profile.first_name} {user.profile.last_name}
-              <IonButton
-                onClick={() => handleFollow(user.id)}
-                className="follow-btn"
-                size="small"
-              >
-                {followeeIds.includes(user.id) ? "Unfollow" : "Follow"}
-              </IonButton>
-            </ion-card-subtitle>
-          </ion-card-header>
-        </ion-card>
+              <div>@{user?.username}</div>
+            </div>
+
+            {/* <div>@</div> */}
+            <IonButton
+              className="follow-btn"
+              onClick={() => handleFollow(user.id)}
+              color="dark"
+              size="small"
+            >
+              {followeeIds.includes(user.id) ? "Following" : "Follow"}
+            </IonButton>
+          </div>
+        </IonCard>
       );
     }
   });

@@ -7,12 +7,17 @@ import {
   IonButton,
   IonItem,
   IonLabel,
+  IonIcon,
 } from "@ionic/react";
 import { useAuth } from "./contexts/AuthContext";
 import "../theme/LoginForm.css";
+import { warning } from "ionicons/icons";
+import { Link, Redirect, useHistory, useLocation } from "react-router-dom";
 
 const LoginForm = () => {
-  const { login , error} = useAuth();
+  const history = useHistory();
+
+  const { login, error } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,12 +29,25 @@ const LoginForm = () => {
   return (
     <div className="login-card">
       <IonCard class="login-form">
-        <form onSubmit={handleLogin}>
-          <IonCardHeader>
-            <IonLabel color="danger">{error}</IonLabel>
-
-            <IonCardTitle>Fit World</IonCardTitle>
-          </IonCardHeader>
+        <form className="form" onSubmit={handleLogin}>
+          <ion-card-header>
+            <ion-card-title
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "25px",
+              }}
+              className="title"
+            >
+              Fit World
+            </ion-card-title>
+          </ion-card-header>
+          {error && (
+            <IonItem className="user-flow-ntfy" color="danger" shape="round">
+              <p slot="start">{error}</p>
+              {<IonIcon className="icon" icon={warning}></IonIcon>}
+            </IonItem>
+          )}
           <IonInput
             class="login-input"
             type="text"
@@ -46,10 +64,11 @@ const LoginForm = () => {
             value={password}
             required
           ></IonInput>
-          <IonButton expand="block" class="login-btn" type="submit">
+          <IonButton expand="" class="login-btn" type="submit">
             Login
           </IonButton>
-          <IonItem href="signup" className="ion-activated">
+
+          <IonItem href="signup" className="link">
             <IonLabel>Need an account? Sign Up</IonLabel>
           </IonItem>
         </form>

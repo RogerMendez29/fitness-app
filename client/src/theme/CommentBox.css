@@ -1,0 +1,41 @@
+.comments-list {
+  margin-bottom: 0;
+  border-top: 1px solid rgb(224, 218, 218);
+  padding-top: 0px;
+  margin: 0;
+}
+
+.comment-card {
+  height: fit-content;
+  margin: 0.5rem;
+}
+
+.comment-icon {
+  right: 0;
+}
+
+.comment-image {
+  margin: 5px;
+}
+
+.comments {
+  border: 1px solid, red;
+  height: 300px;
+  background-color: white;
+  overflow: auto;
+}
+
+.comment-card-content .comment-card-content ion-avatar svg,
+.comment-card-content ion-avatar img {
+  display: inline;
+  cursor: pointer;
+  width: 55px;
+  height: 55px;
+}
+
+.comment-card-content {
+  padding: 0;
+  padding-inline: 0.125rem;
+  /* display: flex; */
+  text-align: center;
+}

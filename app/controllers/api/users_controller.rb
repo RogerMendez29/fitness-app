@@ -1,15 +1,8 @@
 class Api::UsersController < ApplicationController
-
-
-    
-
-    
-
     def index
         users = User.all.order(:id)
         render json:users
     end
-
     def show
         if current_user
             render json: current_user,status: :ok
@@ -17,24 +10,15 @@ class Api::UsersController < ApplicationController
             render json: { error: "Currently No Sessions is active"}, status: :unauthorized
         end
     end
-
-    
     def find
         user = User.find(params[:id])
         render json: user, status: :ok
     end
-
     def suggested
         users=User.all.order(('created_at DESC'))
-        suggested=users.select { |user| user.profile.fitness_level == "Advanced"}
-        
-
-
-
+        suggested=users.select { |user| user.profile.fitness_level == "Advanced" || user.profile.fitness_level == current_user.profile.fitness_level }
         render json:suggested
     end
-
-
     def create
         user = User.create(user_params)
         user_profile = Profile.create(user_id: user.id)
@@ -49,7 +33,7 @@ class Api::UsersController < ApplicationController
     private
 
     def user_params
-        params.permit(:email, :trainer,:phone, :password, :password_confirmation)
+        params.permit(:email, :trainer,:phone, :username, :password, :password_confirmation)
 
     end
 

@@ -30,6 +30,8 @@ import {
 function EditProfileForm({ currentUser, setEditing, setCurrentUser, editing }) {
   const [firstName, setFirstName] = useState(currentUser.profile.first_name);
   const [lastName, setLastName] = useState(currentUser.profile.last_name);
+  const [username, setUsername] = useState(currentUser.username);
+
   const [fitness, setFitness] = useState(currentUser.profile.fitness_level);
   const [weight, setWeight] = useState(currentUser.profile.weight);
   const [bodyFat, setBodyFat] = useState(currentUser.profile.bodyfat);
@@ -56,6 +58,7 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser, editing }) {
         user_id: currentUser.id,
         first_name: firstName,
         last_name: lastName,
+
         fitness_level: fitness,
         weight: weight,
         bodyfat: bodyFat,
@@ -64,8 +67,6 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser, editing }) {
       }),
     }).then((res) => {
       if (res.ok) {
-        // setEditing(false)
-        // navToHome()
         {
           editing ? setEditing(false) : navToHome();
         }
@@ -95,6 +96,7 @@ function EditProfileForm({ currentUser, setEditing, setCurrentUser, editing }) {
           placeholder="Last name"
         ></IonInput>
       </IonItem>
+     
       <IonItem>
         <IonLabel>Fitness Level</IonLabel>
         <IonSelect

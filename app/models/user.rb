@@ -19,6 +19,8 @@ class User < ApplicationRecord
     validates :password, length: { minimum: 5, wrong_length: "Password must be at least 5 characters." }
 
     validates :email, presence: true, uniqueness: true
-    validates :phone, numericality: { only_integer: true }, length: {is:10}
+    validates :username, presence: true, uniqueness: true
+
+    validates :phone, numericality: { only_integer: true }, length: {is:10}, allow_blank: true
 
 end

@@ -11,6 +11,8 @@ function UserPage({
   handleFollow,
   followeeIds,
   setFolloweeIds,
+  currentUser,
+  users,
 }) {
   let { id } = useParams();
 
@@ -22,10 +24,14 @@ function UserPage({
   if (user) {
     return (
       <Profile
-        user={user}
-        handleFollow={handleFollow}
+        currentUser={currentUser}
         followeeIds={followeeIds}
+        users={users}
         setFolloweeIds={setFolloweeIds}
+        setUser={setUser}
+        canModify={canModify}
+        handleFollow={handleFollow}
+        user={user}
       />
     );
   } else {

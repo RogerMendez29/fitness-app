@@ -19,7 +19,9 @@ function EditExerciseForm({
   setEditingExercise,
   setWorkoutExercises,
 }) {
-  const { workoutExercises, setWorkouts } = useAuth();
+  const { workoutExercises, setWorkouts, workouts } = useAuth();
+
+  const [updatedWorkout, setUpdatedWorkout] = useState();
 
   const [exercise, setExercise] = useState({
     sets: postedExercise.sets,
@@ -29,6 +31,12 @@ function EditExerciseForm({
     distance: postedExercise.distance,
     rest: postedExercise.rest,
   });
+
+  useEffect(() => {
+    setUpdatedWorkout(
+      workouts.filter((workout) => workout.id === postedExercise.workout_id)
+    );
+  }, []);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -47,21 +55,33 @@ function EditExerciseForm({
       }),
     }).then((res) => {
       if (res.ok) {
-        // editableExercise.removeAll();
         setEditableExercise(new Set());
-        res.json().then((data) => {});
+        // res.json().then((data) => {
+        //   let update = workouts.map((workout) => {
+        //     if (data.workout_id === workout.id) {
+        //       setUpdatedWorkout([
+        //         { ...updatedWorkout, workout_exercises: data },
+        //       ]);
+        //       return updatedWorkout;
+        //     } else {
+        //       return workout;
+        //     }
+        //   });
+
+        //   console.log(update);
+
+        //   setWorkouts(update);
+        // });
+
         fetch("/api/workouts")
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
-
             setWorkouts(data);
           });
       } else {
       }
     });
   }
-  console.log(editableExercise);
 
   return (
     <form className="" onSubmit={handleSubmit}>

@@ -40,12 +40,14 @@ function SearchBar({ setExerciseId, wordEntered, setWordEntered, exerciseId }) {
 
   return (
     <div className="search">
-      <div className="searchInputs">
-        <IonInput
+      <div className="search-input">
+        <IonSearchbar
+          className=""
           type="text"
           placeholder="search"
           value={wordEntered}
           onIonChange={handleFilter}
+          required
         />
       </div>
       {filteredData.length != 0 && (
@@ -55,17 +57,17 @@ function SearchBar({ setExerciseId, wordEntered, setWordEntered, exerciseId }) {
         >
           {filteredData.slice(0, 150).map((value, key) => {
             return (
-              <ion-item
+              <IonItem
                 class="name"
                 key={key}
                 onClick={() => {
                   setWordEntered(value.name);
-                  setExerciseId( value.id);
+                  setExerciseId(value.id);
                   dataContainer.style.display = "none";
                 }}
               >
                 <ion-label>{value.name}</ion-label>
-              </ion-item>
+              </IonItem>
             );
           })}
         </div>

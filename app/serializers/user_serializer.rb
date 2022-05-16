@@ -1,5 +1,5 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :email, :password_digest, :trainer, :phone, :created_at, :user_can_modify
+  attributes :id, :email,:username, :trainer, :phone, :created_at, :user_can_modify
 
   has_one :profile
   has_many :workouts
@@ -8,8 +8,8 @@ class UserSerializer < ActiveModel::Serializer
   has_many :followees
 
   def user_can_modify
-    current_user.admin?
-
+    self.object.admin?
+    
   end
 
 end

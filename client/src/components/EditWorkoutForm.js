@@ -36,8 +36,18 @@ function EditWorkoutForm({ post, setEditingWorkout, setEditableWorkout }) {
 
         setEditingWorkout(false);
         res.json().then((data) => {
+          console.log(workouts);
+
+          let update = workouts.map((workout) => {
+            if (data.id === workout.id) {
+              return data;
+            } else {
+              return workout;
+            }
+          });
+
           let updated = workouts.filter((workout) => workout.id !== data.id);
-          setWorkouts([...updated, data]);
+          setWorkouts(update);
         });
       } else {
         console.log(false);

@@ -1,8 +1,8 @@
 .login-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(11, 12, 12)!important;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* background-color: rgb(11, 12, 12)!important; */
     --background:#141414
 
   }
@@ -10,3 +10,5 @@
  .errors{
    font-size: 30px;
  }
+
+ 

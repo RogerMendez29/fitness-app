@@ -9,31 +9,43 @@ import {
   IonTextarea,
   IonPage,
 } from "@ionic/react";
+import { home, trash } from "ionicons/icons";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/contexts/AuthContext";
 import { IonButton, IonAvatar } from "@ionic/react";
-import "../theme/Utils.css";
 import EditWorkoutForm from "./EditWorkoutForm";
 import EditProfileForm from "./EditWorkoutForm";
 import EditExerciseForm from "./EditExerciseForm";
 import ModalBody from "./ModalBody";
 
-function CommentCard({ comment }) {
- 
+function CommentCard({ comment, navToUserPage, setPosts, posts }) {
+  const { currentUser, setWorkouts } = useAuth();
 
+  console.log(posts);
+
+  const handleDelete = () => {
+    fetch(`api/comments/${comment.id}`, {
+      method: "DELETE",
+      credentials: "include",
+    }).then((res) => {
+      if (res.ok) {
+        setPosts(posts.filter((post) => post.id !== comment.id));
+      }
+    });
+  };
   function userImage(comment) {
     return comment.thumbnail_url ? (
       <IonAvatar>
         <img
           className="comment-image"
           src={comment.thumbnail_url}
-          //   onClick={() => navToUserPage(user.id)}
+          onClick={() => navToUserPage(comment.user_id)}
         />
       </IonAvatar>
     ) : (
       <IonAvatar>
         <svg
-          //   onClick={() => navToUserPage(user.id)}
+          onClick={() => navToUserPage(comment.user_id)}
           xmlns="http://www.w3.org/2000/svg"
           className="ionicon"
           viewBox="0 0 512 512"
@@ -46,15 +58,49 @@ function CommentCard({ comment }) {
   }
 
   return (
-    <IonCard>
-      <ion-subtitle>{comment.created_date}: </ion-subtitle>
-      <ion-subtitle>{comment.created_time}</ion-subtitle>
-      {userImage(comment)}
-
-      <ion-subtitle style={{ fontWeight: "bold" }}>
-        {comment.full_name}:
+    <IonCard className="comment-card">
+      <ion-subtitle
+        style={{
+          bottom: "0",
+          right: "7%",
+          position: "absolute",
+          marginRight: "1rem",
+        }}
+      >
+        {comment.created_date}{" "}
       </ion-subtitle>
+      <ion-subtitle
+        style={{
+          bottom: "0",
+          right: "0",
+          position: "absolute",
+          marginRight: ".5rem",
+        }}
+      >
+        {comment.created_time}
+      </ion-subtitle>
+      <div className="comment-card-content" style={{ display: "inline" }}>
+        {userImage(comment)}
+
+        <ion-subtitle style={{ fontWeight: "bold" }}>
+          {comment.full_name}:
+        </ion-subtitle>
+      </div>
+
       <ion-text>{comment.comment}</ion-text>
+      {currentUser.id === comment.user_id || currentUser.user_can_modify ? (
+        <IonIcon
+          onClick={handleDelete}
+          style={{
+            cursor: "pointer",
+            top: "0",
+            right: "0",
+            position: "absolute",
+            margin: ".7rem",
+          }}
+          icon={trash}
+        ></IonIcon>
+      ) : null}
     </IonCard>
   );
 }

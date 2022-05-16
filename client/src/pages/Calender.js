@@ -30,6 +30,8 @@ import {
   IonSelectOption,
   IonHeader,
   IonToolbar,
+  IonTitle,
+  IonSubtitle,
 } from "@ionic/react";
 
 const locales = {
@@ -62,7 +64,8 @@ function Calender() {
   });
   const [allEvents, setAllEvents] = useState(userEvents);
 
-  function handleAddEvent() {
+  function handleAddEvent(e) {
+    e.preventDefault();
     fetch("/api/calenders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -86,64 +89,86 @@ function Calender() {
       <IonContent>
         <div className="date-picker-container">
           <div className="date-picker-form">
-            <h1 className="title">Calendar</h1>
-            <h3>Add New Event</h3>
-
-            <IonInput
-              className="input"
-              type="text"
-              placeholder="Add Title"
-              value={newEvent.title}
-              onIonChange={(e) =>
-                setNewEvent({ ...newEvent, title: e.target.value })
-              }
-            />
-            <IonItem>
-              <IonLabel>Workout</IonLabel>
-              <IonSelect
-                value={newEvent.workoutId}
-                onIonChange={(e) => {
-                  setNewEvent({
-                    ...newEvent,
-                    workoutId: e.target.value,
-                  });
+            {/* <IonCard className="callender-card"> */}
+            <form className="event-form" onSubmit={(e)=>handleAddEvent(e)}>
+              <IonTitle
+                style={{
+                  marginBottom: "1.25rem",
+                  fontWeight: "bold",
+                  fontSize: "25px",
                 }}
               >
-                {currentUser.workouts?.map((workout) => {
-                  return (
-                    <IonSelectOption
-                      key={workout.id}
-                      value={workout.id}
-                      // value2={workout.name}
-                    >
-                      {workout.name}
-                    </IonSelectOption>
-                  );
-                })}
-              </IonSelect>
-            </IonItem>
-            <DatePicker
-              placeholderText="Start Date"
-              style={{ marginRight: "10px" }}
-              selected={newEvent.start}
-              showTimeSelect
-              dateFormat="Pp"
-              onChange={(start) => {
-                console.log(start);
+                Calender
+              </IonTitle>
+              <IonTitle
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                }}
+              >
+                Add New Event
+              </IonTitle>
 
-                setNewEvent({ ...newEvent, start });
-              }}
-            />
-            <DatePicker
-              placeholderText="End Date"
-              selected={newEvent.end}
-              onChange={(end) => setNewEvent({ ...newEvent, end })}
-              showTimeSelect
-              dateFormat="Pp"
-            />
-            <IonButton stlye={{ marginTop: "10px" }} onClick={handleAddEvent}>
-              Add Event
-            </IonButton>
+              <IonInput
+                className="input"
+                type="text"
+                placeholder="Title"
+                value={newEvent.title}
+                required
+                onIonChange={(e) =>
+                  setNewEvent({ ...newEvent, title: e.target.value })
+                }
+              />
+              <IonItem className="workout-selector">
+                <IonLabel>Choose One:</IonLabel>
+                <IonSelect
+                  className="workout-selector"
+                  value={newEvent.workoutId}
+                  onIonChange={(e) => {
+                    setNewEvent({
+                      ...newEvent,
+                      workoutId: e.target.value,
+                    });
+                  }}
+                >
+                  {currentUser.workouts?.map((workout) => {
+                    return (
+                      <IonSelectOption
+                        key={workout.id}
+                        value={workout.id}
+                        // value2={workout.name}
+                      >
+                        {workout.name}
+                      </IonSelectOption>
+                    );
+                  })}
+                </IonSelect>
+              </IonItem>
+              <DatePicker
+                className="date-picker"
+                placeholderText="Start Date"
+                selected={newEvent.start}
+                showTimeSelect
+                dateFormat="Pp"
+                onChange={(start) => {
+                  console.log(start);
+
+                  setNewEvent({ ...newEvent, start });
+                }}
+              />
+              <DatePicker
+                className="date-picker"
+                placeholderText="End Date"
+                selected={newEvent.end}
+                onChange={(end) => setNewEvent({ ...newEvent, end })}
+                showTimeSelect
+                dateFormat="Pp"
+              />
+              <IonButton type="submit" stlye={{ marginTop: "10px" }}>
+                Add Event
+              </IonButton>
+            </form>
+            {/* </IonCard> */}
           </div>
         </div>
 

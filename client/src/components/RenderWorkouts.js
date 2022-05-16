@@ -6,25 +6,26 @@ import {
   IonTitle,
   IonIcon,
   IonCard,
-  IonTextarea,
+  IonCardHeader,
+  IonText,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
+import { chatbox } from "ionicons/icons";
+
+import { useHistory, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/contexts/AuthContext";
 import { IonButton, IonAvatar } from "@ionic/react";
-import "../theme/Utils.css";
 import EditWorkoutForm from "./EditWorkoutForm";
-import EditProfileForm from "./EditWorkoutForm";
 import EditExerciseForm from "./EditExerciseForm";
 import ModalBody from "./ModalBody";
-import { ellipsisHorizontalOutline } from "ionicons/icons";
 import CommentBox from "./CommentBox";
+import "../theme/WorkoutCard.css";
 
-function RenderWorkouts({ posts, setPosts, canModify }) {
+function RenderWorkouts({ posts, setPosts, canModify, setUser }) {
   const [editableWorkout, setEditableWorkout] = useState(new Set());
   const [editableExercise, setEditableExercise] = useState(new Set());
   const [openComment, setOpenComment] = useState(new Set());
-
+  const { workouts, setWorkouts, setCurrentUser, currentUser } = useAuth();
   const [open, setOpen] = useState(false);
   const [editingWorkout, setEditingWorkout] = useState(false);
   const [editingExercise, setEditingExercise] = useState(false);
@@ -34,7 +35,19 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
     setOpen(false);
   };
 
-  const { workouts, setWorkouts, setCurrentUser, currentUser } = useAuth();
+  let history = useHistory();
+  let location = useLocation();
+
+  function navToUserPage(id) {
+    setUser(null);
+    history.push(`/user_page/${id}`);
+
+    fetch(`/api/user_page/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUser(data);
+      });
+  }
 
   function handleEdit(id) {
     if (editableWorkout.has(id)) {
@@ -65,17 +78,18 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
 
   function userImage(workout) {
     return workout.thumbnail_url ? (
-      <IonAvatar>
+      <IonAvatar style={{ display: "inline", marginRight: "10px" }}>
         <img
+          style={{ display: "inline", marginRight: "20px" }}
           className="comment-image"
           src={workout.thumbnail_url}
-          //   onClick={() => navToUserPage(user.id)}
+          onClick={() => navToUserPage(workout.user_id)}
         />
       </IonAvatar>
     ) : (
       <IonAvatar>
         <svg
-          //   onClick={() => navToUserPage(user.id)}
+          onClick={() => navToUserPage(workout.user_id)}
           xmlns="http://www.w3.org/2000/svg"
           className="ionicon"
           viewBox="0 0 512 512"
@@ -93,8 +107,6 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
       credentials: "include",
     }).then((res) => {
       if (res.ok) {
-        console.log("success");
-
         let updated = workouts.filter((posts) => posts.id !== id);
         setWorkouts(updated);
         setCurrentUser({ ...currentUser, workouts: updated });
@@ -102,164 +114,185 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
     });
   }
 
+  const difficultyColor = (value) => {
+    if (value === "Intermediate") {
+      return "blue";
+    } else if (value === "Easy") {
+      return "green";
+    } else {
+      return "red";
+    }
+  };
+
   const workoutCards = posts?.map((workout) => {
+
     if (workout.workout_exercises?.length > 0) {
       return (
-        <ion-card key={workout.id}>
-          <ion-card-header>
-            {userImage(workout)}
-            <ion-card-subtitle> {workout.posted_by}</ion-card-subtitle>
-            <ion-card-title>
-              {workout.name} •{" "}
-              <h6 style={{ color: "green", display: "inline" }}>
-                {workout.difficulty}
-              </h6>
-            </ion-card-title>
-            <ion-text color="dark">
-              <h3 style={{ color: "grey" }}>{workout.description}</h3>
-            </ion-text>
-          </ion-card-header>
-
-          {canModify || workout.user_id === currentUser.id ? (
-            <div>
-              <IonButton
-                onClick={() => handleDelete(workout.id)}
-                className="delete-btn"
-                color="danger"
+        <IonCard key={workout.id} className="workout-card">
+          <div className="workout-card-content">
+            <IonCardHeader className="workout-card-header">
+              <div
+                className="workout-card-header"
+                style={{ fontWeight: "bold" }}
               >
-                Delete
-              </IonButton>
-              <IonButton
-                onClick={() => handleEdit(workout.id)}
-                color="success"
-                className="edit-btn"
-              >
-                {editableWorkout.has(workout.id) ? "Done" : "Edit"}
-              </IonButton>
-            </div>
-          ) : null}
-
-          {editableWorkout.has(workout.id) ? (
-            <EditWorkoutForm
-              setEditableWorkout={setEditableWorkout}
-              post={workout}
-              setEditingWorkout={setEditingWorkout}
-            />
-          ) : null}
-          <IonModal
-            isOpen={open}
-            onDismiss={closeModal}
-            breakpoints={[0, 0.2, 0.5, 0.7]}
-            initialBreakpoint={0.7}
-            backdropBreakpoint={0.2}
-          >
-            <ModalBody setOpen={setOpen} id={exerciseId} />
-          </IonModal>
-
-          <ion-card-content>
-            <IonList>
-              {workout.workout_exercises?.map((exercise) => {
-                return editableExercise.has(exercise.id) ? (
-                  <EditExerciseForm
-                    setEditableExercise={setEditableExercise}
-                    editableExercise={editableExercise}
-                    key={exercise.id}
-                    setEditingExercise={setEditingExercise}
-                    postedExercise={exercise}
-                  />
-                ) : (
-                  <div key={exercise.id}>
-                    <IonTitle
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setExerciseId(exercise.exercise_id);
-                        setOpen(!open);
-                      }}
-                    >
-                      {exercise.name}
-                    </IonTitle>
-                    <IonItem key={exercise.id}>
-                      {exercise.sets ? (
-                        <IonLabel> Sets: {exercise.sets}</IonLabel>
-                      ) : null}
-                      {exercise.reps ? (
-                        <IonLabel> Reps: {exercise.reps}</IonLabel>
-                      ) : null}
-                      {exercise.rest ? (
-                        <IonLabel> Rest: {exercise.rest}s</IonLabel>
-                      ) : null}
-
-                      {exercise.weight ? (
-                        <IonLabel> Weight: {exercise.weight} Ibs</IonLabel>
-                      ) : null}
-                      {exercise.time ? (
-                        <IonLabel> Time: {exercise.time}minutes</IonLabel>
-                      ) : null}
-                      {exercise.distance ? (
-                        <IonLabel> Distance: {exercise.distance}miles</IonLabel>
-                      ) : null}
-                      {canModify || workout.user_id === currentUser.id ? (
-                        <IonButton
-                          onClick={() => handleEditExercise(exercise.id)}
-                          color="success"
-                        >
-                          {editableExercise.has(workout.id) ? "Done" : "Edit"}
-                        </IonButton>
-                      ) : null}
-                    </IonItem>
+                {userImage(workout)}{" "}
+                <div style={{ marginTop: "1rem" }}> {workout.posted_by}</div>
+                <IonTitle
+                  color="dark"
+                  style={{
+                    marginLeft: "5.25rem",
+                    fontWeight: "bold",
+                    fontSize: "25px",
+                  }}
+                >
+                  {workout.name}{" "}
+                  <div
+                    style={{
+                      textAlign: "right",
+                      marginLeft: "3.25rem",
+                      fontWeight: "bold",
+                      fontSize: "12px",
+                      color: difficultyColor(workout.difficulty),
+                    }}
+                  >
+                    {workout.difficulty}
                   </div>
-                );
-              })}
-            </IonList>
-          </ion-card-content>
-          <svg
-            style={{ cursor: "pointer" }}
-            onClick={() => handleShowBox(workout.id)}
-            xmlns="http://www.w3.org/2000/svg"
-            className="ionicon"
-            // className="comment-icon"
-            viewBox="0 0 512 512"
-          >
-            <title>Ellipsis Horizontal</title>
-            <circle
-              cx="256"
-              cy="256"
-              r="32"
-              fill="none"
-              stroke="currentColor"
-              strokeMiterlimit="10"
-              strokeWidth="32"
-            />
-            <circle
-              cx="416"
-              cy="256"
-              r="32"
-              fill="none"
-              stroke="currentColor"
-              strokeMiterlimit="10"
-              strokeWidth="32"
-            />
-            <circle
-              cx="96"
-              cy="256"
-              r="32"
-              fill="none"
-              stroke="currentColor"
-              strokeMiterlimit="10"
-              strokeWidth="32"
-            />
-          </svg>
-          {openComment.has(workout.id) ? (
-            <CommentBox
-              workouts={workouts}
-              setWorkouts={setWorkouts}
-              workoutId={workout.id}
-              userId={currentUser.id}
-              comments={workout.comments}
-              setOpenComment={setOpenComment}
-            />
-          ) : null}
-        </ion-card>
+                </IonTitle>
+              </div>
+            </IonCardHeader>
+            <IonText color="dark">
+              <p
+                style={{ color: "grey", marginLeft: "4.8rem", marginTop: "0" }}
+              >
+                {workout.description}
+              </p>
+            </IonText>
+
+            {canModify || workout.user_id === currentUser.id ? (
+              <div>
+                <IonButton
+                  onClick={() => handleDelete(workout.id)}
+                  className="delete-btn"
+                  color="dark"
+                  size="small"
+                >
+                  Delete
+                </IonButton>
+                <IonButton
+                  onClick={() => handleEdit(workout.id)}
+                  color="dark"
+                  size="small"
+                  className="edit-btn"
+                >
+                  {editableWorkout.has(workout.id) ? "Done" : "Edit"}
+                </IonButton>
+              </div>
+            ) : null}
+
+            {editableWorkout.has(workout.id) ? (
+              <EditWorkoutForm
+                setEditableWorkout={setEditableWorkout}
+                post={workout}
+                setEditingWorkout={setEditingWorkout}
+              />
+            ) : null}
+            <IonModal
+              isOpen={open}
+              onDismiss={closeModal}
+              breakpoints={[0, 0.2, 0.5, 0.7]}
+              initialBreakpoint={0.7}
+              backdropBreakpoint={0.2}
+            >
+              <ModalBody setOpen={setOpen} id={exerciseId} />
+            </IonModal>
+
+            <ion-card-content style={{ paddingBottom: "0" }}>
+              <IonList>
+                {workout.workout_exercises?.map((exercise) => {
+                  return editableExercise.has(exercise.id) ? (
+                    <EditExerciseForm
+                      setEditableExercise={setEditableExercise}
+                      editableExercise={editableExercise}
+                      key={exercise.id}
+                      setEditingExercise={setEditingExercise}
+                      postedExercise={exercise}
+                    />
+                  ) : (
+                    <div key={exercise.id}>
+                      <IonTitle
+                        className="exercise-title"
+                        color="dark"
+                        onClick={() => {
+                          setExerciseId(exercise.exercise_id);
+                          setOpen(!open);
+                        }}
+                      >
+                        {exercise.name}
+                      </IonTitle>
+                      <IonItem key={exercise.id}>
+                        {exercise.sets ? (
+                          <IonLabel className="workout-label"> Sets: {exercise.sets}</IonLabel>
+                        ) : null}
+                        {exercise.reps ? (
+                          <IonLabel className="workout-label" > Reps: {exercise.reps}</IonLabel>
+                        ) : null}
+                        {exercise.rest ? (
+                          <IonLabel className="workout-label"> Rest: {exercise.rest}s</IonLabel>
+                        ) : null}
+
+                        {exercise.weight ? (
+                          <IonLabel> Weight: {exercise.weight} Ibs</IonLabel>
+                        ) : null}
+                        {exercise.time ? (
+                          <IonLabel className="workout-label" > Time: {exercise.time} Minutes</IonLabel>
+                        ) : null}
+                        {exercise.distance ? (
+                          <IonLabel  className="workout-label" >
+                            {" "}
+                            Distance: {exercise.distance} Miles
+                          </IonLabel>
+                        ) : null}
+                        {canModify || workout.user_id === currentUser.id ? (
+                          <IonButton
+                            onClick={() => handleEditExercise(exercise.id)}
+                            color="dark"
+                          >
+                            {editableExercise.has(workout.id) ? "Done" : "Edit"}
+                          </IonButton>
+                        ) : null}
+                      </IonItem>
+                    </div>
+                  );
+                })}
+              </IonList>
+            </ion-card-content>
+            <IonTitle
+              className="comment-title"
+              style={{
+                cursor: "pointer",
+                width: "fit-content",
+                margin: ".5rem",
+                marginTop: "0",
+              }}
+              onClick={() => handleShowBox(workout.id)}
+            >
+              <IonIcon className="comment-icon" icon={chatbox}></IonIcon>
+              Comment
+            </IonTitle>
+
+            {openComment.has(workout.id) ? (
+              <CommentBox
+                navToUserPage={navToUserPage}
+                workouts={workouts}
+                setWorkouts={setWorkouts}
+                workoutId={workout.id}
+                userId={currentUser.id}
+                comments={workout.comments}
+                setOpenComment={setOpenComment}
+              />
+            ) : null}
+          </div>
+        </IonCard>
       );
     } else {
       return null;
@@ -268,10 +301,16 @@ function RenderWorkouts({ posts, setPosts, canModify }) {
 
   if (posts.length > 0) {
     return workoutCards;
-  } else {
+  } else if (location.pathname === "/home") {
     return (
       <IonTitle style={{ margin: "15%" }}>
         Follow Users to Increase Your Feed
+      </IonTitle>
+    );
+  } else {
+    return (
+      <IonTitle style={{ margin: "15%", textAlign: "center" }}>
+       No Posts Available
       </IonTitle>
     );
   }

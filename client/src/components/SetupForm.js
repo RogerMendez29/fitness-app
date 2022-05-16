@@ -21,31 +21,11 @@ const SetupForm = ({ setEditing }) => {
   const [phone, setPhone] = useState();
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    fetch("/api/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        phone,
-        password_confirmation: passwordConfirmation,
-      }),
-    }).then((res) => {
-      if (res.ok) {
-        res.json().then((user) => {
-          setCurrentUser(user);
-        });
-      }
-    });
-  }
+  
 
   return (
     <div className="login-card">
-      <IonCard class="login-form">
+      <IonCard class="">
         <EditProfileForm
           setCurrentUser={setCurrentUser}
           currentUser={currentUser}
